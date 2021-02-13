@@ -1,0 +1,13 @@
+.fill-width {
+    width: 100vw;
+}
+
+.fill-height {
+    height: 100vh;
+}
+
+
+.side-bar {
+    width: 10vw;
+    min-width: 100px;
+}
