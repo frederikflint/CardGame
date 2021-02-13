@@ -8,39 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43154b56-9b06-4b66-a9b3-61853ffaf577" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/riderModule.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/CardGameServer.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Controllers/RoomController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Controllers/WeatherForecastController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Dtos/CreateRoomDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Entities/Message.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Hubs/ChatHub.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Properties/launchSettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Services/MessageService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Services/RoomService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Startup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/WeatherForecast.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/appsettings.Development.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/appsettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CardGameUI/.idea/.idea.CardGameUI.dir/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CardGameUI/.idea/.idea.CardGameUI.dir/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CardGameUI/.idea/.idea.CardGameUI.dir/.idea/riderModule.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CardGameUI/Pages/GameLobby.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CardGameUI/Shared/Button.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/CardGameUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/CardGameUI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/FetchData.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/FetchData.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/Shared/MainLayout.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Shared/MainLayout.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,10 +27,6 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ADD2055A-ED91-409C-AE4F-3047E55DABE2/10F/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/085DF059-DDA4-4799-877A-E8C35F7F053C/46/5b57517c/HubCallerContext.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -132,13 +98,14 @@
       <option name="presentableId" value="Default" />
       <updated>1613232820719</updated>
       <workItem from="1613232836923" duration="6337000" />
+      <workItem from="1613248261460" duration="638000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -150,6 +117,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

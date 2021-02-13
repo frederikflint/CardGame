@@ -40,8 +40,15 @@
         <p class="my-2">
             Or..
         </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-6">
+            <div>
+                <b class="">Choose game room: </b>
+            </div>
+            <div>
+                <input class="border border-black rounded w-full my-2" id="game_id" @bind="NewRoomId" @bind:event="oninput"/>
+            </div>
+        </div>
 
-        <input class="border border-black rounded w-full" id="game_id" @bind="NewRoomId" @bind:event="oninput"/>
         <div>
             <button class="border border-black rounded bg-blue-400 p-2 w-full hover:bg-blue-600" @onclick="CreateNewGameRoom">
                 Create new game
