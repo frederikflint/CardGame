@@ -1,21 +1,103 @@
 ﻿@page "/"
+@using Newtonsoft.Json
+@using JsonSerializer = System.Text.Json.JsonSerializer
+@using System.Text
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
 
 <div class="flex flex-col h-full">
-    <div class="self-center shadow border border-black rounded p-4 w-2/4 h-4/6 my-auto">
+    <div class="self-center shadow border border-black rounded p-4 w-full sm:w-2/4 my-auto">
         <p class="text-center font-semibold">Join game room</p>
 
-        <div class="grid-rows-2">
+        <div>
+            <b class="">Enter name: </b>
+        </div>
+        <div>
+            <input class="border border-black rounded w-full" id="username" @bind="Username" @bind:event="oninput"/>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-6">
             <div>
-                <b class="">Enter game id: </b>
+                <b class="">Choose game room: </b>
             </div>
             <div>
-                <input class="border border-black w-1/3" id="game_id" @bind="gameId" />
+                <select @bind="SelectRoomId" class="w-full">
+                    @foreach (var room in Rooms)
+                    {
+                        <option value=@room>@room</option>
+                    }
+                </select>
             </div>
         </div>
 
+        <div class="my-2">
+            <button disabled="@InformationMissing()" class="border border-black rounded bg-blue-400 p-2 w-full @(InformationMissing() ? "" : "hover:bg-blue-600")" @onclick="JoinGameRoom">
+                Join Game
+            </button>
+        </div>
+
+
+        <p class="my-2">
+            Or..
+        </p>
+
+        <input class="border border-black rounded w-full" id="game_id" @bind="NewRoomId" @bind:event="oninput"/>
+        <div>
+            <button class="border border-black rounded bg-blue-400 p-2 w-full hover:bg-blue-600" @onclick="CreateNewGameRoom">
+                Create new game
+            </button>
+        </div>
     </div>
 </div>
 
 @code {
-    private string gameId = "";
+    private string SelectRoomId = "";
+    private string NewRoomId = "";
+    private string Username = "";
+    private List<string> Rooms = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync("http://localhost:5000/room");
+        response.EnsureSuccessStatusCode();
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseBody);
+        Rooms = JsonSerializer.Deserialize<List<string>>(responseBody);
+
+        SelectRoomId = Rooms.FirstOrDefault();
+    }
+
+    private async Task CreateNewGameRoom()
+    {
+        var createRoom = new CreateRoom() {RoomId = NewRoomId};
+
+        var json = JsonConvert.SerializeObject(createRoom);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await Http.PostAsync("http://localhost:5000/room", data);
+        response.EnsureSuccessStatusCode();
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseBody);
+        Rooms.Add(responseBody);
+
+        SelectRoomId = responseBody;
+    }
+
+    private void JoinGameRoom()
+    {
+        NavigationManager.NavigateTo($"gamelobby/{SelectRoomId}?username={Username}");
+    }
+
+    private bool InformationMissing()
+    {
+        return (SelectRoomId == "") || (Username == "");
+    }
+
+    public class CreateRoom
+    {
+        public string RoomId { get; set; }
+    }
+
 }

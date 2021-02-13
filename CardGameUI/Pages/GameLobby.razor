@@ -1,0 +1,94 @@
+﻿@page "/gamelobby/{roomid}"
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.WebUtilities
+
+
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<div class="flex flex-col h-full">
+    <p>Welcome to game room: @RoomId</p>
+
+    <div class="">
+        <p>User: @username</p>
+    </div>
+
+
+    <div class="border border-black rounded flex-grow overflow-scroll flex">
+        <ul class="self-end flex flex-grow flex-col" id="messagesList">
+            @foreach (var message in messages)
+            {
+                <li class="mx-2 mb-2 @(message.User == username ? "self-end" : "self-start")">@message.User: @message.Text</li>
+            }
+        </ul>
+    </div>
+    <input placeholder="Enter message..." class="absolut bottom-0 w-full my-2" id="messageInput" @bind="messageInput" @bind:event="oninput"/>
+
+    <Button Class="w-full self-end">
+        <button class="w-full text-white" @onclick="Send" disabled="@(!IsConnected)">Send</button>
+    </Button>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string RoomId { get; set; }
+
+    private HubConnection hubConnection;
+    private List<Message> messages = new List<Message>();
+    private string username;
+    private string messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new Uri(NavigationManager.Uri).Query;
+
+        if (QueryHelpers.ParseQuery(query).TryGetValue("username", out var u))
+        {
+            username = u;
+        }
+        else
+        {
+            username = $"random_user {new Random().Next(10)}";
+        }
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/chathub"))
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var msg = new Message() {Text = message, User = user};
+
+            messages.Add(msg);
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        await hubConnection.SendAsync("JoinRoom", username, RoomId);
+    }
+
+    void Send()
+    {
+        hubConnection.SendAsync("SendMessage", username, messageInput, RoomId);
+
+        messageInput = "";
+    }
+
+    public bool IsConnected =>
+        hubConnection.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        await hubConnection.DisposeAsync();
+    }
+
+    public class Message
+    {
+        public string User { get; set; }
+        public string Text { get; set; }
+    }
+
+}
