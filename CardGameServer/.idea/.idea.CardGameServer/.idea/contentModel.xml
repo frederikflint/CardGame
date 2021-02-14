@@ -18,9 +18,11 @@
         </e>
         <e p="Entities" t="Include">
           <e p="Message.cs" t="Include" />
+          <e p="User.cs" t="Include" />
         </e>
         <e p="Hubs" t="Include">
-          <e p="ChatHub.cs" t="Include" />
+          <e p="IndexHub.cs" t="Include" />
+          <e p="LobbyHub.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">

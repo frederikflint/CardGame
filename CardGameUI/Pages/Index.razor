@@ -1,19 +1,28 @@
 ﻿@page "/"
-@using Newtonsoft.Json
 @using JsonSerializer = System.Text.Json.JsonSerializer
-@using System.Text
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.SignalR.Client
 @inject HttpClient Http
+@inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
 
 <div class="flex flex-col h-full">
+    @if (LocalStorage.ContainKey("SessionGuid"))
+    {
+        <div class="self-center">
+            <b>Did you lose connection to a game..?</b>
+            <Button>
+                <button @onclick="RejoinGameRoom" class="w-full text-white">Rejoin here!</button>
+            </Button>
+        </div>
+    }
     <div class="self-center shadow border border-black rounded p-4 w-full sm:w-2/4 my-auto">
         <p class="text-center font-semibold">Join game room</p>
 
         <div>
-            <b class="">Enter name: </b>
+            <b class="">Enter name*: </b>
         </div>
         <div>
-            <input class="border border-black rounded w-full" id="username" @bind="Username" @bind:event="oninput"/>
+            <input class="border border-black rounded w-full" id="username" @bind="_username" @bind:event="oninput"/>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-6">
@@ -21,8 +30,8 @@
                 <b class="">Choose game room: </b>
             </div>
             <div>
-                <select @bind="SelectRoomId" class="w-full">
-                    @foreach (var room in Rooms)
+                <select @bind="_selectRoomId" class="w-full">
+                    @foreach (var room in _rooms)
                     {
                         <option value=@room>@room</option>
                     }
@@ -31,7 +40,7 @@
         </div>
 
         <div class="my-2">
-            <button disabled="@InformationMissing()" class="border border-black rounded bg-blue-400 p-2 w-full @(InformationMissing() ? "" : "hover:bg-blue-600")" @onclick="JoinGameRoom">
+            <button disabled="@InformationMissing()" class="text-white border border-black rounded bg-blue-400 p-2 w-full @(InformationMissing() ? "" : "hover:bg-blue-600")" @onclick="JoinGameRoom">
                 Join Game
             </button>
         </div>
@@ -45,12 +54,12 @@
                 <b class="">Choose game room: </b>
             </div>
             <div>
-                <input class="border border-black rounded w-full my-2" id="game_id" @bind="NewRoomId" @bind:event="oninput"/>
+                <input class="border border-black rounded w-full my-2" id="game_id" @bind="_newRoomId" @bind:event="oninput"/>
             </div>
         </div>
 
         <div>
-            <button class="border border-black rounded bg-blue-400 p-2 w-full hover:bg-blue-600" @onclick="CreateNewGameRoom">
+            <button disabled="@_username.Equals("")" class="text-white border border-black rounded bg-blue-400 p-2 w-full @(_username.Equals("") ? "" : "hover:bg-blue-600")" @onclick="CreateNewGameRoom">
                 Create new game
             </button>
         </div>
@@ -58,10 +67,12 @@
 </div>
 
 @code {
-    private string SelectRoomId = "";
-    private string NewRoomId = "";
-    private string Username = "";
-    private List<string> Rooms = new List<string>();
+    private HubConnection _hubConnection;
+    private string _selectRoomId = "";
+    private string _newRoomId = "";
+    private string _username = "";
+    private bool _userCreatedRoom = false;
+    private List<string> _rooms = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,36 +81,74 @@
 
         var responseBody = await response.Content.ReadAsStringAsync();
         Console.WriteLine(responseBody);
-        Rooms = JsonSerializer.Deserialize<List<string>>(responseBody);
+        _rooms = JsonSerializer.Deserialize<List<string>>(responseBody);
 
-        SelectRoomId = Rooms.FirstOrDefault();
+        _selectRoomId = _rooms.FirstOrDefault();
+
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/indexhub"))
+            .Build();
+
+        _hubConnection.On<string>("RoomUpdated", (roomId) =>
+        {
+            Console.Write(roomId);
+
+            _rooms.Add(roomId);
+            StateHasChanged();
+
+            if (!_userCreatedRoom)
+            {
+                return;
+            }
+
+            _selectRoomId = roomId;
+            JoinGameRoom();
+        });
+
+        await _hubConnection.StartAsync();
     }
 
     private async Task CreateNewGameRoom()
     {
-        var createRoom = new CreateRoom() {RoomId = NewRoomId};
-
-        var json = JsonConvert.SerializeObject(createRoom);
-        var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var response = await Http.PostAsync("http://localhost:5000/room", data);
-        response.EnsureSuccessStatusCode();
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(responseBody);
-        Rooms.Add(responseBody);
-
-        SelectRoomId = responseBody;
+        await _hubConnection.SendAsync("CreateRoom", _newRoomId);
+        _userCreatedRoom = true;
     }
 
     private void JoinGameRoom()
     {
-        NavigationManager.NavigateTo($"gamelobby/{SelectRoomId}?username={Username}");
+        LocalStorage.RemoveItem("SessionGuid");
+        NavigationManager.NavigateTo($"gamelobby/{_selectRoomId}?username={_username}");
+    }
+    
+    private void JoinGameRoomWithGuid()
+    {
+        NavigationManager.NavigateTo($"gamelobby/{_selectRoomId}");
+    }
+
+    private async Task RejoinGameRoom()
+    {
+        var response = await Http.GetAsync($"http://localhost:5000/room/find?guid={LocalStorage.GetItem<string>("SessionGuid")}");
+
+        try
+        {
+            response.EnsureSuccessStatusCode();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Room did not exist");
+            LocalStorage.RemoveItem("SessionGuid");
+        }
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        _selectRoomId = responseBody;
+        
+        JoinGameRoom();
     }
 
     private bool InformationMissing()
     {
-        return (SelectRoomId == "") || (Username == "");
+        return (_selectRoomId == "") || (_username == "");
     }
 
     public class CreateRoom

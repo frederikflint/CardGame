@@ -42,7 +42,12 @@ namespace CardGameServer.Services
 
         public List<Message> GetMessages(string roomId)
         {
-            return _messages[roomId];
+            if (! _messages.ContainsKey(roomId))
+            {
+                return new List<Message>();
+            }
+            
+            return _messages[roomId] == null ? new List<Message>() : _messages[roomId];
         }
     }
 }

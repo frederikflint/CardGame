@@ -72,7 +72,8 @@ namespace CardGameServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<LobbyHub>("/lobbyhub");
+                endpoints.MapHub<IndexHub>("/indexhub");
             });
         }
     }

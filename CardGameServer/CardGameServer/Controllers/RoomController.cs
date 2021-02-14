@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CardGameServer.Dtos;
+using CardGameServer.Hubs;
 using CardGameServer.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace CardGameServer.Controllers
@@ -28,10 +30,17 @@ namespace CardGameServer.Controllers
             return _roomService.GetRooms();
         }
 
-        [HttpPost]
-        public string CreateRoom([FromBody] CreateRoomDto createRoom)
+        [HttpGet("find")]
+        public IActionResult GetRoomFromGuid([FromQuery(Name = "guid")] string guid)
         {
-            return _roomService.AddRoom(createRoom.RoomId);
+             var room = _roomService.GetRoomFromUserGuid(guid);
+
+             if (room == null)
+             {
+                 return NotFound("Not Found");
+             }
+
+             return Ok(room);
         }
     }
 }

@@ -8,9 +8,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43154b56-9b06-4b66-a9b3-61853ffaf577" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Entities/User.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Hubs/IndexHub.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/CardGameServer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/CardGameServer.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Controllers/RoomController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Controllers/RoomController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Hubs/ChatHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Services/MessageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Services/MessageService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Services/RoomService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Services/RoomService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CardGameUI/CardGameUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/CardGameUI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/GameLobby.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/GameLobby.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CardGameUI/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,28 +39,37 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/CD3C346B-1E2E-4F5D-B1FF-418889A78CDA/F/Hub.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/CardGameServer/Properties/launchSettings.json" />
       <option value="$PROJECT_DIR$/CardGameServer/Entities/Message.cs" />
-      <option value="$PROJECT_DIR$/CardGameServer/Startup.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Dtos/createRoomDto.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Dtos/CreateRoomDto.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Hubs/RoomHub.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Hubs/ChatHub.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Startup.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Entities/User.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Controllers/RoomController.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Services/MessageService.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Hubs/IndexHub.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Services/RoomService.cs" />
-      <option value="$PROJECT_DIR$/CardGameServer/Hubs/ChatHub.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1oQxsJ6patnlpldg5RQenJxze9e" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34971997" />
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34994584" />
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -99,6 +119,7 @@
       <updated>1613232820719</updated>
       <workItem from="1613232836923" duration="6337000" />
       <workItem from="1613248261460" duration="638000" />
+      <workItem from="1613314951990" duration="8343000" />
     </task>
     <servers />
   </component>

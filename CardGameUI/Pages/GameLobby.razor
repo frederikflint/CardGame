@@ -1,28 +1,54 @@
 ﻿@page "/gamelobby/{roomid}"
 @using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.AspNetCore.WebUtilities
+@inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
 
 
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
 <div class="flex flex-col h-full">
-    <p>Welcome to game room: @RoomId</p>
+    <div class="flex w-full justify-between">
+        <div class="flex flex-col">
+            <div>
+                <p>Welcome to game room: @RoomId</p>
+            </div>
 
-    <div class="">
-        <p>User: @username</p>
+            <div class="">
+                <p>User: @_username</p>
+                @if (_isAdmin)
+                {
+                    <p>You are admin</p>
+                }
+            </div>
+        </div>
+        <div class="flex">
+            <Button Class="h-10 self-center">
+                <button @onclick="LeaveLobby" class="w-full h-full text-white">Leave lobby</button>
+            </Button>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <b>Active users:</b>
+        <ul>
+            @foreach (var user in _users)
+            {
+                <li>@user</li>
+            }
+        </ul>
     </div>
 
 
     <div class="border border-black rounded flex-grow overflow-scroll flex">
         <ul class="self-end flex flex-grow flex-col" id="messagesList">
-            @foreach (var message in messages)
+            @foreach (var message in _messages)
             {
-                <li class="mx-2 mb-2 @(message.User == username ? "self-end" : "self-start")">@message.User: @message.Text</li>
+                <li class="mx-2 mb-2 @(message.User == _username ? "self-end" : "self-start")">@message.User: @message.Text</li>
             }
         </ul>
     </div>
-    <input placeholder="Enter message..." class="absolut bottom-0 w-full my-2" id="messageInput" @bind="messageInput" @bind:event="oninput"/>
+    <input placeholder="Enter message..." class="absolut bottom-0 w-full my-2" id="messageInput" @bind="_messageInput" @bind:event="oninput"/>
 
     <Button Class="w-full self-end">
         <button class="w-full text-white" @onclick="Send" disabled="@(!IsConnected)">Send</button>
@@ -35,10 +61,12 @@
     [Parameter]
     public string RoomId { get; set; }
 
-    private HubConnection hubConnection;
-    private List<Message> messages = new List<Message>();
-    private string username;
-    private string messageInput;
+    private HubConnection _hubConnection;
+    private readonly List<Message> _messages = new List<Message>();
+    private List<string> _users = new List<string>();
+    private string _username;
+    private string _messageInput;
+    private bool _isAdmin;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,49 +74,98 @@
 
         if (QueryHelpers.ParseQuery(query).TryGetValue("username", out var u))
         {
-            username = u;
+            _username = u;
         }
         else
         {
-            username = $"random_user {new Random().Next(10)}";
+            _username = $"random_user {new Random().Next(10)}";
         }
 
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/chathub"))
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/lobbyhub"))
             .Build();
 
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
         {
             var msg = new Message() {Text = message, User = user};
 
-            messages.Add(msg);
+            _messages.Add(msg);
             StateHasChanged();
         });
 
-        await hubConnection.StartAsync();
+        _hubConnection.On<User>("SessionInformation", async user =>
+        {
+            if (user == null)
+            {
+                await LeaveLobby();
+            }
+            _username = user.Username;
+            _isAdmin = user.Admin;
+            LocalStorage.SetItem("SessionGuid", user.Guid);
 
-        await hubConnection.SendAsync("JoinRoom", username, RoomId);
+            StateHasChanged();
+        });
+
+        _hubConnection.On<string>("UserAdded", user =>
+        {
+            _users.Add(user);
+            
+            StateHasChanged();
+        });
+        
+        _hubConnection.On<string>("UserRemoved", user =>
+        {
+            _users.Remove(user);
+            
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync();
+
+        if (LocalStorage.ContainKey("SessionGuid"))
+        {
+            await _hubConnection.SendAsync("JoinRoomWithGuid", LocalStorage.GetItem<string>("SessionGuid"), RoomId);
+        }
+        else
+        {
+            await _hubConnection.SendAsync("JoinRoom", _username, RoomId);
+        }
+    }
+
+    private async Task LeaveLobby()
+    {
+        if (LocalStorage.ContainKey("SessionGuid"))
+            await _hubConnection.SendAsync("LeaveLobby", LocalStorage.GetItem<string>("SessionGuid"));
+        LocalStorage.RemoveItem("SessionGuid");
+        NavigationManager.NavigateTo($"/");
     }
 
     void Send()
     {
-        hubConnection.SendAsync("SendMessage", username, messageInput, RoomId);
+        _hubConnection.SendAsync("SendMessage", _username, _messageInput, RoomId);
 
-        messageInput = "";
+        _messageInput = "";
     }
 
     public bool IsConnected =>
-        hubConnection.State == HubConnectionState.Connected;
+        _hubConnection.State == HubConnectionState.Connected;
 
     public async ValueTask DisposeAsync()
     {
-        await hubConnection.DisposeAsync();
+        await _hubConnection.DisposeAsync();
     }
 
     public class Message
     {
         public string User { get; set; }
         public string Text { get; set; }
+    }
+
+    public class User
+    {
+        public string Username { get; set; }
+        public string Guid { get; set; }
+        public bool Admin { get; set; }
     }
 
 }
