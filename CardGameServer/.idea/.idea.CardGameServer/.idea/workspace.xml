@@ -8,20 +8,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43154b56-9b06-4b66-a9b3-61853ffaf577" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Entities/User.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Hubs/IndexHub.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Controllers/GameController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Entities/Card.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Entities/GameState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Services/GameService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Services/MouselGameService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CardGameUI/Pages/Games/Mousel.razor" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CardGameUI/Shared/Card.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CardGameServer/CardGameServer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/CardGameServer.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CardGameServer/Controllers/RoomController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Controllers/RoomController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CardGameServer/Hubs/ChatHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CardGameServer/Services/MessageService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Services/MessageService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CardGameServer/Services/RoomService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Services/RoomService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Entities/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Entities/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CardGameServer/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/CardGameUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/CardGameUI.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/GameLobby.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/GameLobby.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +41,13 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/CD3C346B-1E2E-4F5D-B1FF-418889A78CDA/F/Hub.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/A9771B1B-9028-4496-853F-BBE4CEDF5E2A/3/SwaggerMiddleware.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ADD2055A-ED91-409C-AE4F-3047E55DABE2/10F/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/B538A170-1CD3-4843-86B8-076E88796BC8/1/SwaggerUIMiddleware.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/12E15177-DAB8-4CD7-950F-5B97FC6C3FE8/27/Select.SpeedOpt.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/085DF059-DDA4-4799-877A-E8C35F7F053C/46/5b57517c/HubCallerContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5B199CB6-B194-433B-8F05-38D6B488E24F/11/DeveloperExceptionPageMiddleware.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -50,13 +57,20 @@
       <option value="$PROJECT_DIR$/CardGameServer/Dtos/CreateRoomDto.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Hubs/RoomHub.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Hubs/ChatHub.cs" />
-      <option value="$PROJECT_DIR$/CardGameServer/Startup.cs" />
-      <option value="$PROJECT_DIR$/CardGameServer/Entities/User.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Controllers/RoomController.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Services/MessageService.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Hubs/IndexHub.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Services/RoomService.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Entities/GameState.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Entities/User.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Program.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Entities/Card.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Services/GameService.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Controllers/GameController.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Services/MouselGameService.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Startup.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1oQxsJ6patnlpldg5RQenJxze9e" />
@@ -69,7 +83,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34994584" />
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34975636" />
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -120,6 +134,7 @@
       <workItem from="1613232836923" duration="6337000" />
       <workItem from="1613248261460" duration="638000" />
       <workItem from="1613314951990" duration="8343000" />
+      <workItem from="1613376367048" duration="7063000" />
     </task>
     <servers />
   </component>
@@ -142,5 +157,61 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs</url>
+          <line>23</line>
+          <properties documentPath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" initialLine="23" containingFunctionPresentation="method 'SendMessage'">
+            <startOffsets>
+              <option value="810" />
+            </startOffsets>
+            <endOffsets>
+              <option value="860" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs</url>
+          <line>25</line>
+          <properties documentPath="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" initialLine="25" containingFunctionPresentation="method 'EnterGameAsPlayer'">
+            <startOffsets>
+              <option value="794" />
+            </startOffsets>
+            <endOffsets>
+              <option value="852" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs</url>
+          <line>19</line>
+          <properties documentPath="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" initialLine="19" containingFunctionPresentation="method 'EnterGameAsPlayer'">
+            <startOffsets>
+              <option value="548" />
+            </startOffsets>
+            <endOffsets>
+              <option value="614" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#CardGameServer.Services.RoomService" memberName="_roomClientDictionary" />
+        <PinnedItemInfo parentTag="Type#CardGameServer.Hubs.LobbyHub" memberName="_roomService" />
+      </pinned-members>
+    </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="LaunchSettings">
+        <watch expression="_roomService" language="C#" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

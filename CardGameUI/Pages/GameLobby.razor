@@ -23,6 +23,12 @@
             </div>
         </div>
         <div class="flex">
+            @if (_isAdmin)
+            {
+                <Button Class="h-10 self-center">
+                    <button @onclick="StartGame" class="w-full h-full text-white">Start Game</button>
+                </Button>
+            }
             <Button Class="h-10 self-center">
                 <button @onclick="LeaveLobby" class="w-full h-full text-white">Leave lobby</button>
             </Button>
@@ -109,15 +115,26 @@
         _hubConnection.On<string>("UserAdded", user =>
         {
             _users.Add(user);
-            
+
             StateHasChanged();
         });
-        
+
         _hubConnection.On<string>("UserRemoved", user =>
         {
             _users.Remove(user);
-            
+
             StateHasChanged();
+        });
+
+        _hubConnection.On("GameStarted", () =>
+        {
+            if (!LocalStorage.ContainKey("SessionGuid"))
+            {
+                Console.WriteLine("Could not start game withoug Session GUID");
+                return;
+            }
+
+            NavigationManager.NavigateTo($"games/mousel/{RoomId}");
         });
 
         await _hubConnection.StartAsync();
@@ -132,10 +149,30 @@
         }
     }
 
+    private void StartGame()
+    {
+        if (!_isAdmin || !LocalStorage.ContainKey("SessionGuid"))
+        {
+            Console.WriteLine("Not admin or missing SessionGuid");
+            return;
+        }
+
+        _hubConnection.SendAsync("StartGame", LocalStorage.GetItem<string>("SessionGuid"), RoomId);
+    }
+
     private async Task LeaveLobby()
     {
         if (LocalStorage.ContainKey("SessionGuid"))
-            await _hubConnection.SendAsync("LeaveLobby", LocalStorage.GetItem<string>("SessionGuid"));
+        {
+            try
+            {
+                await _hubConnection.SendAsync("LeaveLobby", LocalStorage.GetItem<string>("SessionGuid"));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
         LocalStorage.RemoveItem("SessionGuid");
         NavigationManager.NavigateTo($"/");
     }

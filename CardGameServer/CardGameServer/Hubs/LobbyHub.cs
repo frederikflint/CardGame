@@ -10,11 +10,13 @@ namespace CardGameServer.Hubs
     {
         private readonly IMessageService _messageService;
         private readonly IRoomService _roomService;
+        private readonly MouselGameService _mouselGameService;
 
-        public LobbyHub(IMessageService messageService, IRoomService roomService)
+        public LobbyHub(IMessageService messageService, IRoomService roomService, MouselGameService mouselGameService)
         {
             _messageService = messageService;
             _roomService = roomService;
+            _mouselGameService = mouselGameService;
         }
 
         public async Task SendMessage(string user, string message, string roomId)
@@ -39,6 +41,13 @@ namespace CardGameServer.Hubs
             var user = _roomService.GetUserFromUserGuid(guid);
 
             await Clients.Caller.SendAsync("SessionInformation", user);
+
+            if (user == null)
+            {
+                return;
+            }
+            
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
 
             foreach (var message in _messageService.GetMessages(roomId))
             {
@@ -76,6 +85,20 @@ namespace CardGameServer.Hubs
             }
 
             await Clients.AllExcept(Context.ConnectionId).SendAsync("UserAdded", user.Username);
+        }
+
+        public async Task StartGame(string guid, string roomId)
+        {
+            var user = _roomService.GetUserFromUserGuid(guid);
+
+            if (!user.Admin)
+            {
+                return;
+            }
+            
+            _mouselGameService.InitializeGame(roomId, _roomService.GetUsersInRoom(roomId));
+
+            await Clients.Group(roomId).SendAsync("GameStarted");   
         }
     }
 }

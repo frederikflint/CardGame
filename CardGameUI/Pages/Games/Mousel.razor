@@ -1,0 +1,53 @@
+﻿@page "/games/mousel/{roomid}"
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.WebUtilities
+@inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
+
+
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<div>
+    <ul>
+        @foreach (var card in _cards)
+        {
+            <li>@card.Suit.ToString() @card.Number.ToString()</li>
+        }
+    </ul>
+</div>
+
+@code {
+
+    [Parameter]
+    public string RoomId { get; set; }
+
+    private HubConnection _hubConnection;
+    private List<Card> _cards = new List<Card>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/mouselhub"))
+            .Build();
+
+        _hubConnection.On<List<Card>>("PlayerHand", (cards) =>
+        {
+            Console.WriteLine($"Handsize: {cards.Count}");
+
+            _cards = cards;
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync();
+
+        var guid = LocalStorage.GetItem<string>("SessionGuid");
+        await _hubConnection.SendAsync("EnterGameAsPlayer", guid, RoomId);
+    }
+    
+    public async ValueTask DisposeAsync()
+    {
+        await _hubConnection.DisposeAsync();
+    }
+
+
+}

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Frederik Flint\AppData\local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Frederik Flint\AppData\local\JetBrains\Rider2020.3\resharper-host\local\Transient\Rider\v203\SolutionCaches\_CardGameServer.389018514.00" t="ExcludeRecursive" />
-    <e p="C:\Users\Frederik Flint\source\repos\CardGame\CardGameServer" t="IncludeFlat">
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="CardGameServer" t="IncludeRecursive">
         <e p="appsettings.Development.json" t="Include" />
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="CardGameServer.csproj" t="IncludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="GameController.cs" t="Include" />
           <e p="RoomController.cs" t="Include" />
           <e p="WeatherForecastController.cs" t="Include" />
         </e>
@@ -17,12 +16,15 @@
           <e p="createRoomDto.cs" t="Include" />
         </e>
         <e p="Entities" t="Include">
+          <e p="Card.cs" t="Include" />
+          <e p="GameState.cs" t="Include" />
           <e p="Message.cs" t="Include" />
           <e p="User.cs" t="Include" />
         </e>
         <e p="Hubs" t="Include">
           <e p="IndexHub.cs" t="Include" />
           <e p="LobbyHub.cs" t="Include" />
+          <e p="MouselHub.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -36,7 +38,9 @@
           <e p="launchSettings.json" t="Include" />
         </e>
         <e p="Services" t="Include">
+          <e p="GameService.cs" t="Include" />
           <e p="MessageService.cs" t="Include" />
+          <e p="MouselGameService.cs" t="Include" />
           <e p="RoomService.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
@@ -45,5 +49,7 @@
       <e p="CardGameServer.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
     </e>
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.3/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.3/resharper-host/local/Transient/Rider/v203/SolutionCaches/_CardGameServer.524308338.00" t="ExcludeRecursive" />
   </component>
 </project>

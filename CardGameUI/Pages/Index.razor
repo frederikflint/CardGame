@@ -30,17 +30,24 @@
                 <b class="">Choose game room: </b>
             </div>
             <div>
-                <select @bind="_selectRoomId" class="w-full">
-                    @foreach (var room in _rooms)
-                    {
-                        <option value=@room>@room</option>
-                    }
-                </select>
+                @if (_rooms.Count > 0)
+                {
+                    <select @bind="_selectRoomId" class="w-full">
+                        @foreach (var room in _rooms)
+                        {
+                            <option value=@room>@room</option>
+                        }
+                    </select>
+                }
+                else
+                {
+                    <p>No game rooms active</p>
+                }
             </div>
         </div>
 
         <div class="my-2">
-            <button disabled="@InformationMissing()" class="text-white border border-black rounded bg-blue-400 p-2 w-full @(InformationMissing() ? "" : "hover:bg-blue-600")" @onclick="JoinGameRoom">
+            <button disabled="@JoinRoomInfoMissing()" class="text-white border border-black rounded p-2 w-full @(JoinRoomInfoMissing() ? "bg-gray-400" : "bg-blue-400 hover:bg-blue-600")" @onclick="JoinGameRoom">
                 Join Game
             </button>
         </div>
@@ -51,7 +58,7 @@
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-6">
             <div>
-                <b class="">Choose game room: </b>
+                <b class="">New game room id: </b>
             </div>
             <div>
                 <input class="border border-black rounded w-full my-2" id="game_id" @bind="_newRoomId" @bind:event="oninput"/>
@@ -59,7 +66,7 @@
         </div>
 
         <div>
-            <button disabled="@_username.Equals("")" class="text-white border border-black rounded bg-blue-400 p-2 w-full @(_username.Equals("") ? "" : "hover:bg-blue-600")" @onclick="CreateNewGameRoom">
+            <button disabled="@(CreateRoomInfoMissing())" class="text-white border border-black rounded p-2 w-full @(CreateRoomInfoMissing() ? "bg-gray-400" : "bg-blue-400 hover:bg-blue-600")" @onclick="CreateNewGameRoom">
                 Create new game
             </button>
         </div>
@@ -94,6 +101,12 @@
             Console.Write(roomId);
 
             _rooms.Add(roomId);
+
+            if (_rooms.Count == 1)
+            {
+                _selectRoomId = roomId;
+            }
+            
             StateHasChanged();
 
             if (!_userCreatedRoom)
@@ -119,7 +132,7 @@
         LocalStorage.RemoveItem("SessionGuid");
         NavigationManager.NavigateTo($"gamelobby/{_selectRoomId}?username={_username}");
     }
-    
+
     private void JoinGameRoomWithGuid()
     {
         NavigationManager.NavigateTo($"gamelobby/{_selectRoomId}");
@@ -132,7 +145,6 @@
         try
         {
             response.EnsureSuccessStatusCode();
-
         }
         catch (Exception e)
         {
@@ -142,13 +154,18 @@
 
         var responseBody = await response.Content.ReadAsStringAsync();
         _selectRoomId = responseBody;
-        
+
         JoinGameRoom();
     }
 
-    private bool InformationMissing()
+    private bool JoinRoomInfoMissing()
     {
-        return (_selectRoomId == "") || (_username == "");
+        return string.IsNullOrEmpty(_selectRoomId) || (_username == "");
+    }
+    
+    private bool CreateRoomInfoMissing()
+    {
+        return string.IsNullOrEmpty(_newRoomId) || (_username == "");
     }
 
     public class CreateRoom
