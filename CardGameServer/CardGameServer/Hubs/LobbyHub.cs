@@ -1,3 +1,4 @@
+using System;
 using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using CardGameServer.Services;
@@ -12,7 +13,8 @@ namespace CardGameServer.Hubs
         private readonly IRoomService _roomService;
         private readonly DavoserjazzGameService _davoserjazzGameService;
 
-        public LobbyHub(IMessageService messageService, IRoomService roomService, DavoserjazzGameService davoserjazzGameService)
+        public LobbyHub(IMessageService messageService, IRoomService roomService,
+            DavoserjazzGameService davoserjazzGameService)
         {
             _messageService = messageService;
             _roomService = roomService;
@@ -30,9 +32,9 @@ namespace CardGameServer.Hubs
             if (_roomService.RoomExists(_roomService.GetRoomFromUserGuid(guid)))
             {
                 await Clients.Group(_roomService.GetRoomFromUserGuid(guid))
-                    .SendAsync("UserRemoved", _roomService.GetUserFromUserGuid(guid));    
+                    .SendAsync("UserRemoved", _roomService.GetUserFromUserGuid(guid));
             }
-            
+
             _roomService.CleanupUser(guid);
         }
 
@@ -46,14 +48,14 @@ namespace CardGameServer.Hubs
             {
                 return;
             }
-            
+
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
 
             foreach (var message in _messageService.GetMessages(roomId))
             {
                 await Clients.Caller.SendAsync("ReceiveMessage", message.User, message.Text);
             }
-            
+
             foreach (var userInRoom in _roomService.GetUsersInRoom(roomId))
             {
                 await Clients.Caller.SendAsync("UserAdded", userInRoom.Username);
@@ -95,10 +97,17 @@ namespace CardGameServer.Hubs
             {
                 return;
             }
-            
+
+            // DavoserJazz requires 3 to 7 players
+            var playerCount = _roomService.GetUsersInRoom(roomId).Count;
+            if (playerCount < 3 || 7 < playerCount)
+            {
+                return;
+            }
+
             _davoserjazzGameService.InitializeGame(roomId, _roomService.GetUsersInRoom(roomId));
 
-            await Clients.Group(roomId).SendAsync("GameStarted");   
+            await Clients.Group(roomId).SendAsync("GameStarted");
         }
     }
 }

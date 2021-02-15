@@ -17,23 +17,23 @@ namespace CardGameServer.Services
         public override void InitializeGame(string roomId, List<User> users)
         {
             List<GameUser> gameUsers = users.Select(user => new GameUser() {User = user}).ToList();
-            
+
             foreach (var user in gameUsers)
             {
                 user.Hand = new List<Card>();
                 user.Table = new List<Card>();
             }
 
-            var deck = GenerateDeck();
+            var deck = GenerateDeck(CalculateAmountOfJokers(gameUsers.Count));
             deck = ShuffleCards(deck);
-            
-            DealCards(deck, gameUsers, 7);
+
+            DealCards(deck, gameUsers);
 
             var gameState = new GameState();
             gameState.Deck = deck;
             gameState.Round = 0;
             gameState.Users = gameUsers;
-            
+
             _roomToGameStates.Add(roomId, gameState);
         }
 
@@ -53,6 +53,24 @@ namespace CardGameServer.Services
             }
 
             return gameUser.Hand;
+        }
+
+        // DavozerJazz has different amount of jokers based on player count
+        public int CalculateAmountOfJokers(int playerCount)
+        {
+            switch (playerCount)
+            {
+                case 3:
+                case 6:
+                    return 2;
+                case 5:
+                    return 3;
+                case 4:
+                case 7:
+                    return 4;
+                default:
+                    return -1;
+            }
         }
     }
 }

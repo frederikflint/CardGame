@@ -2,14 +2,14 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.AspNetCore.WebUtilities
 @inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
-
+@inject Blazored.SessionStorage.ISyncSessionStorageService SessionStorage
 
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
 <div class="flex h-full">
-    <div class="flex justify-between overflow-x-scroll self-center mx-auto">
-        @foreach (var card in _cards)
+    <div class="flex justify-between overflow-x-scroll self-center mx-auto grid grid-cols-7">
+        @foreach (var card in GetOrderedCards())
         {
             <CardComponent _card="card"></CardComponent>
         }
@@ -40,13 +40,20 @@
 
         await _hubConnection.StartAsync();
 
-        var guid = LocalStorage.GetItem<string>("SessionGuid");
+        var guid = SessionStorage.GetItem<string>("SessionGuid");
         await _hubConnection.SendAsync("EnterGameAsPlayer", guid, RoomId);
     }
 
     public async ValueTask DisposeAsync()
     {
         await _hubConnection.DisposeAsync();
+    }
+
+    public List<CardClass> GetOrderedCards()
+    {
+        return _cards.AsEnumerable()
+            .OrderBy(d => d.Number)
+            .GroupBy(d => d.Suit).SelectMany(x => x).ToList();
     }
 
 

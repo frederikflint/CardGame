@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.AspNetCore.WebUtilities
 @inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
+@inject Blazored.SessionStorage.ISyncSessionStorageService SessionStorage
 
 
 @inject NavigationManager NavigationManager
@@ -107,7 +108,7 @@
             }
             _username = user.Username;
             _isAdmin = user.Admin;
-            LocalStorage.SetItem("SessionGuid", user.Guid);
+            SessionStorage.SetItem("SessionGuid", user.Guid);
 
             StateHasChanged();
         });
@@ -128,7 +129,7 @@
 
         _hubConnection.On("GameStarted", () =>
         {
-            if (!LocalStorage.ContainKey("SessionGuid"))
+            if (!SessionStorage.ContainKey("SessionGuid"))
             {
                 Console.WriteLine("Could not start game withoug Session GUID");
                 return;
@@ -139,9 +140,9 @@
 
         await _hubConnection.StartAsync();
 
-        if (LocalStorage.ContainKey("SessionGuid"))
+        if (SessionStorage.ContainKey("SessionGuid"))
         {
-            await _hubConnection.SendAsync("JoinRoomWithGuid", LocalStorage.GetItem<string>("SessionGuid"), RoomId);
+            await _hubConnection.SendAsync("JoinRoomWithGuid", SessionStorage.GetItem<string>("SessionGuid"), RoomId);
         }
         else
         {
@@ -151,29 +152,29 @@
 
     private void StartGame()
     {
-        if (!_isAdmin || !LocalStorage.ContainKey("SessionGuid"))
+        if (!_isAdmin || !SessionStorage.ContainKey("SessionGuid"))
         {
             Console.WriteLine("Not admin or missing SessionGuid");
             return;
         }
 
-        _hubConnection.SendAsync("StartGame", LocalStorage.GetItem<string>("SessionGuid"), RoomId);
+        _hubConnection.SendAsync("StartGame", SessionStorage.GetItem<string>("SessionGuid"), RoomId);
     }
 
     private async Task LeaveLobby()
     {
-        if (LocalStorage.ContainKey("SessionGuid"))
+        if (SessionStorage.ContainKey("SessionGuid"))
         {
             try
             {
-                await _hubConnection.SendAsync("LeaveLobby", LocalStorage.GetItem<string>("SessionGuid"));
+                await _hubConnection.SendAsync("LeaveLobby", SessionStorage.GetItem<string>("SessionGuid"));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
         }
-        LocalStorage.RemoveItem("SessionGuid");
+        SessionStorage.RemoveItem("SessionGuid");
         NavigationManager.NavigateTo($"/");
     }
 

@@ -1,15 +1,25 @@
 <div class="flex flex-col justify-between w-auto h-auto max-h-32 max-w-26 border border-black rounded p-2 m-2 hover:bg-blue-400">
     <div class="flex justify-between">
-        <p class="hidden sm:block text-center sm:text-left w-full">@GetNumberFromEnum(_card.Number)</p>
-        <p class="text-center sm:text-right w-full">@GetNumberFromEnum(_card.Number)</p>
+        <p class="hidden md:block text-center md:text-left w-full">@GetNumberFromEnum(_card.Number)</p>
+        <p class="text-center md:text-right w-full">@GetNumberFromEnum(_card.Number)</p>
     </div>
     <div class="flex items-center justify-center">
-        <img alt="/icons/clover.png" src="/icons/@(_card.Suit.ToString()).png" class="max-h-16"/>
+        @if (_card.Number == Number.JOKER)
+        {
+            <p class="text-base md:text-xl">
+                JOKER
+            </p>
+        }
+        else
+        {
+            <img alt="/icons/clover.png" src="/icons/@(_card.Suit.ToString()).png" class="max-h-16"/>
+        }
     </div>
     <div class="flex justify-between">
-        <p class="hidden sm:block text-center sm:text-left w-full">@GetNumberFromEnum(_card.Number)</p>
-        <p class="text-center sm:text-right w-full">@GetNumberFromEnum(_card.Number)</p>
+        <p class="hidden md:block text-center md:text-left w-full">@GetNumberFromEnum(_card.Number)</p>
+        <p class="text-center md:text-right w-full">@GetNumberFromEnum(_card.Number)</p>
     </div>
+
 </div>
 
 @code {

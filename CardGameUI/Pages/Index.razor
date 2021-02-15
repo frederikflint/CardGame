@@ -4,9 +4,10 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
+@inject Blazored.SessionStorage.ISyncSessionStorageService SessionStorage
 
 <div class="flex flex-col h-full">
-    @if (LocalStorage.ContainKey("SessionGuid"))
+    @if (SessionStorage.ContainKey("SessionGuid"))
     {
         <div class="self-center">
             <b>Did you lose connection to a game..?</b>
@@ -129,7 +130,7 @@
 
     private void JoinGameRoom()
     {
-        LocalStorage.RemoveItem("SessionGuid");
+        SessionStorage.RemoveItem("SessionGuid");
         NavigationManager.NavigateTo($"gamelobby/{_selectRoomId}?username={_username}");
     }
 
@@ -140,7 +141,7 @@
 
     private async Task RejoinGameRoom()
     {
-        var response = await Http.GetAsync($"http://localhost:5000/room/find?guid={LocalStorage.GetItem<string>("SessionGuid")}");
+        var response = await Http.GetAsync($"http://localhost:5000/room/find?guid={SessionStorage.GetItem<string>("SessionGuid")}");
 
         try
         {
@@ -149,7 +150,7 @@
         catch (Exception e)
         {
             Console.WriteLine("Room did not exist");
-            LocalStorage.RemoveItem("SessionGuid");
+            SessionStorage.RemoveItem("SessionGuid");
         }
 
         var responseBody = await response.Content.ReadAsStringAsync();

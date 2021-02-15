@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text;
 using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,11 @@ namespace CardGameUI
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddBlazoredLocalStorage(config =>
+            {
+                config.JsonSerializerOptions.WriteIndented = true;
+            });
+
+            builder.Services.AddBlazoredSessionStorage(config =>
             {
                 config.JsonSerializerOptions.WriteIndented = true;
             });
