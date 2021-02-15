@@ -51,7 +51,7 @@ namespace CardGameServer
 
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IRoomService, RoomService>();
-            services.AddSingleton<MouselGameService, MouselGameService>();
+            services.AddSingleton<DavoserjazzGameService, DavoserjazzGameService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +75,7 @@ namespace CardGameServer
                 endpoints.MapControllers();
                 endpoints.MapHub<LobbyHub>("/lobbyhub");
                 endpoints.MapHub<IndexHub>("/indexhub");
-                endpoints.MapHub<MouselHub>("/mouselhub");
+                endpoints.MapHub<DavoserjazzHub>("/davoserjazzhub");
             });
         }
     }

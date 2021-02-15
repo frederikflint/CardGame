@@ -8,21 +8,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43154b56-9b06-4b66-a9b3-61853ffaf577" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Controllers/GameController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Entities/Card.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Entities/GameState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Services/GameService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CardGameServer/Services/MouselGameService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CardGameUI/Pages/Games/Mousel.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CardGameUI/Shared/Card.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CardGameServer/Hubs/DavoserjazzHub.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CardGameUI/Shared/CardComponent.razor" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CardGameUI/wwwroot/icons/club.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CardGameUI/wwwroot/icons/diamond.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CardGameUI/wwwroot/icons/heart.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../CardGameUI/wwwroot/icons/spade.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CardGameServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CardGameServer/Entities/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Entities/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Controllers/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Controllers/GameController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CardGameServer/Services/MouselGameService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Services/DavoserjazzGameService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CardGameServer/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CardGameServer/Startup.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/GameLobby.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/GameLobby.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/Index.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CardGameUI/Pages/Games/Mousel.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Pages/Games/Davoserjazz.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CardGameUI/Shared/Card.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Shared/CardClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CardGameUI/Shared/MainLayout.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../CardGameUI/Shared/MainLayout.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +72,8 @@
       <option value="$PROJECT_DIR$/CardGameServer/Services/MouselGameService.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Hubs/DavoserjazzHub.cs" />
+      <option value="$PROJECT_DIR$/CardGameServer/Services/DavoserjazzGameService.cs" />
       <option value="$PROJECT_DIR$/CardGameServer/Startup.cs" />
     </changedPaths>
   </component>
@@ -134,7 +138,7 @@
       <workItem from="1613232836923" duration="6337000" />
       <workItem from="1613248261460" duration="638000" />
       <workItem from="1613314951990" duration="8343000" />
-      <workItem from="1613376367048" duration="7063000" />
+      <workItem from="1613376367048" duration="9231000" />
     </task>
     <servers />
   </component>
@@ -166,39 +170,13 @@
           <line>23</line>
           <properties documentPath="$PROJECT_DIR$/CardGameServer/Hubs/LobbyHub.cs" initialLine="23" containingFunctionPresentation="method 'SendMessage'">
             <startOffsets>
-              <option value="810" />
+              <option value="840" />
             </startOffsets>
             <endOffsets>
-              <option value="860" />
+              <option value="890" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs</url>
-          <line>25</line>
-          <properties documentPath="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" initialLine="25" containingFunctionPresentation="method 'EnterGameAsPlayer'">
-            <startOffsets>
-              <option value="794" />
-            </startOffsets>
-            <endOffsets>
-              <option value="852" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs</url>
-          <line>19</line>
-          <properties documentPath="$PROJECT_DIR$/CardGameServer/Hubs/MouselHub.cs" initialLine="19" containingFunctionPresentation="method 'EnterGameAsPlayer'">
-            <startOffsets>
-              <option value="548" />
-            </startOffsets>
-            <endOffsets>
-              <option value="614" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

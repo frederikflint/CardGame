@@ -22,9 +22,9 @@
           <e p="User.cs" t="Include" />
         </e>
         <e p="Hubs" t="Include">
+          <e p="DavoserjazzHub.cs" t="Include" />
           <e p="IndexHub.cs" t="Include" />
           <e p="LobbyHub.cs" t="Include" />
-          <e p="MouselHub.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -38,9 +38,9 @@
           <e p="launchSettings.json" t="Include" />
         </e>
         <e p="Services" t="Include">
+          <e p="DavoserjazzGameService.cs" t="Include" />
           <e p="GameService.cs" t="Include" />
           <e p="MessageService.cs" t="Include" />
-          <e p="MouselGameService.cs" t="Include" />
           <e p="RoomService.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />

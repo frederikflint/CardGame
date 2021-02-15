@@ -16,10 +16,10 @@ namespace CardGameServer.Controllers
     [Route("[controller]")]
     public class GameController : ControllerBase
     {
-        private readonly MouselGameService _gameService;
+        private readonly DavoserjazzGameService _gameService;
         private readonly ILogger<GameController> _logger;
 
-        public GameController(ILogger<GameController> logger, MouselGameService gameService)
+        public GameController(ILogger<GameController> logger, DavoserjazzGameService gameService)
         {
             _logger = logger;
             _gameService = gameService;

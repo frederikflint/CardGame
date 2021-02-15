@@ -1,4 +1,4 @@
-﻿@page "/games/mousel/{roomid}"
+﻿@page "/games/davoserjazz/{roomid}"
 @using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.AspNetCore.WebUtilities
 @inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
@@ -7,13 +7,13 @@
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
-<div>
-    <ul>
+<div class="flex h-full">
+    <div class="flex justify-between overflow-x-scroll self-center mx-auto">
         @foreach (var card in _cards)
         {
-            <li>@card.Suit.ToString() @card.Number.ToString()</li>
+            <CardComponent _card="card"></CardComponent>
         }
-    </ul>
+    </div>
 </div>
 
 @code {
@@ -22,15 +22,15 @@
     public string RoomId { get; set; }
 
     private HubConnection _hubConnection;
-    private List<Card> _cards = new List<Card>();
+    private List<CardClass> _cards = new List<CardClass>();
 
     protected override async Task OnInitializedAsync()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/mouselhub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/davoserjazzhub"))
             .Build();
 
-        _hubConnection.On<List<Card>>("PlayerHand", (cards) =>
+        _hubConnection.On<List<CardClass>>("PlayerHand", (cards) =>
         {
             Console.WriteLine($"Handsize: {cards.Count}");
 
@@ -43,7 +43,7 @@
         var guid = LocalStorage.GetItem<string>("SessionGuid");
         await _hubConnection.SendAsync("EnterGameAsPlayer", guid, RoomId);
     }
-    
+
     public async ValueTask DisposeAsync()
     {
         await _hubConnection.DisposeAsync();

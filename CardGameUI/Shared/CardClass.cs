@@ -1,6 +1,6 @@
 namespace CardGameUI.Shared
 {
-    public class Card
+    public class CardClass
     {
         public Suit Suit { get; set; }
         public Number Number { get; set; }

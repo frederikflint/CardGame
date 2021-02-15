@@ -10,13 +10,13 @@ namespace CardGameServer.Hubs
     {
         private readonly IMessageService _messageService;
         private readonly IRoomService _roomService;
-        private readonly MouselGameService _mouselGameService;
+        private readonly DavoserjazzGameService _davoserjazzGameService;
 
-        public LobbyHub(IMessageService messageService, IRoomService roomService, MouselGameService mouselGameService)
+        public LobbyHub(IMessageService messageService, IRoomService roomService, DavoserjazzGameService davoserjazzGameService)
         {
             _messageService = messageService;
             _roomService = roomService;
-            _mouselGameService = mouselGameService;
+            _davoserjazzGameService = davoserjazzGameService;
         }
 
         public async Task SendMessage(string user, string message, string roomId)
@@ -96,7 +96,7 @@ namespace CardGameServer.Hubs
                 return;
             }
             
-            _mouselGameService.InitializeGame(roomId, _roomService.GetUsersInRoom(roomId));
+            _davoserjazzGameService.InitializeGame(roomId, _roomService.GetUsersInRoom(roomId));
 
             await Clients.Group(roomId).SendAsync("GameStarted");   
         }

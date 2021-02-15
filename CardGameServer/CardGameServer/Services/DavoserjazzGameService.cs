@@ -5,11 +5,11 @@ using CardGameServer.Entities;
 
 namespace CardGameServer.Services
 {
-    public class MouselGameService : GameService
+    public class DavoserjazzGameService : GameService
     {
         private readonly Dictionary<string, GameState> _roomToGameStates;
 
-        public MouselGameService()
+        public DavoserjazzGameService()
         {
             _roomToGameStates = new Dictionary<string, GameState>();
         }
