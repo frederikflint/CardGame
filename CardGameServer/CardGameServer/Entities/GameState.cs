@@ -11,9 +11,11 @@ namespace CardGameServer.Entities
         public int Round { get; set; }
     }
 
-    public class DavoserJazzGameState : GameState<DavoserJazzGameUserUser>
+    public class DavoserJazzGameState : GameState<DavoserJazzGameUser>
     {
         public RoundTypeEnum RoundType { get; set; }
+        
+        public Suit SuitToMatch { get; set; }
 
         public static Dictionary<RoundTypeEnum, bool> AceHighestByRoundType = new Dictionary<RoundTypeEnum, bool>()
         {

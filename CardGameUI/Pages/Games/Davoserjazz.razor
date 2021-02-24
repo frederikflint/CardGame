@@ -9,9 +9,18 @@
 
 <div class="flex h-full">
     <div class="flex justify-between overflow-x-scroll self-center mx-auto grid grid-cols-7">
+        <div class="col-span-7">
+            <button @onclick="NavigateToIndex">Home</button>
+        </div>
+        @if (_yourTurn)
+        {
+            <p class="col-span-7">It is your turn! Make a move!</p>
+        }
         @foreach (var card in GetOrderedCards())
         {
-            <CardComponent _card="card"></CardComponent>
+            <button @onclick="() => PlayCard(card)">
+                <CardComponent _card="card"></CardComponent>
+            </button>
         }
     </div>
 </div>
@@ -23,6 +32,7 @@
 
     private HubConnection _hubConnection;
     private List<CardClass> _cards = new List<CardClass>();
+    private bool _yourTurn = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,11 +40,28 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/davoserjazzhub"))
             .Build();
 
-        _hubConnection.On<List<CardClass>>("PlayerHand", (cards) =>
+        _hubConnection.On<DavoserJazzGameUser>("PlayerInformation", (user) =>
         {
-            Console.WriteLine($"Handsize: {cards.Count}");
+            Console.WriteLine($"Handsize: {user.Hand.Count}");
 
-            _cards = cards;
+            _cards = user.Hand;
+            _yourTurn = user.YourTurn;
+            StateHasChanged();
+        });
+
+        _hubConnection.On<string>("ActivePlayer", (guid) =>
+        {
+            Console.WriteLine(guid);
+            var myGuid = SessionStorage.GetItem<string>("SessionGuid");
+            if (myGuid == guid)
+            {
+                _yourTurn = true;
+            }
+            else
+            {
+                _yourTurn = false;
+            }
+
             StateHasChanged();
         });
 
@@ -42,6 +69,12 @@
 
         var guid = SessionStorage.GetItem<string>("SessionGuid");
         await _hubConnection.SendAsync("EnterGameAsPlayer", guid, RoomId);
+    }
+
+    public async Task PlayCard(CardClass card)
+    {
+        var guid = SessionStorage.GetItem<string>("SessionGuid");
+        await _hubConnection.SendAsync("UserTakeTurn", RoomId, guid, card.Suit, card.Number);
     }
 
     public async ValueTask DisposeAsync()
@@ -54,6 +87,11 @@
         return _cards.AsEnumerable()
             .OrderBy(d => d.Number)
             .GroupBy(d => d.Suit).SelectMany(x => x).ToList();
+    }
+
+    private void NavigateToIndex()
+    {
+        NavigationManager.NavigateTo($"");
     }
 
 

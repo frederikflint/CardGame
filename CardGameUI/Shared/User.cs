@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CardGameServer.Entities
+namespace CardGameUI.Shared
 {
     public class User
     {
@@ -13,8 +13,8 @@ namespace CardGameServer.Entities
     {
         public User User { get; set; }
         public int Score { get; set; }
-        public List<Card> Hand { get; set; }
-        public List<Card> Table { get; set; }
+        public List<CardClass> Hand { get; set; }
+        public List<CardClass> Table { get; set; }
         public bool YourTurn { get; set; }
         public bool IsDealer { get; set; }
         
@@ -22,6 +22,6 @@ namespace CardGameServer.Entities
 
     public class DavoserJazzGameUser : GameUser
     {
-        public Card ActiveCard { get; set; }
+        public CardClass ActiveCard { get; set; }
     }
 }
