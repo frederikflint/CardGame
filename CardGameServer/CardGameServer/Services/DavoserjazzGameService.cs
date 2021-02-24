@@ -7,11 +7,11 @@ namespace CardGameServer.Services
 {
     public class DavoserjazzGameService : GameService
     {
-        private readonly Dictionary<string, GameState> _roomToGameStates;
+        private readonly Dictionary<string, DavoserJazzGameState> _roomToGameStates;
 
         public DavoserjazzGameService()
         {
-            _roomToGameStates = new Dictionary<string, GameState>();
+            _roomToGameStates = new Dictionary<string, DavoserJazzGameState>();
         }
 
         public override void InitializeGame(string roomId, List<User> users)
@@ -29,10 +29,25 @@ namespace CardGameServer.Services
 
             DealCards(deck, gameUsers);
 
-            var gameState = new GameState();
+            var davoserJazzGameUsers = gameUsers.Select(gUser => new DavoserJazzGameUserUser
+            {
+                Hand = gUser.Hand,
+                User = gUser.User,
+                Score = 0,
+                Table = new List<Card>(),
+                ActiveCard = null
+            }).OrderBy(u => Guid.NewGuid()).ToList();
+
+            var gameState = new DavoserJazzGameState();
             gameState.Deck = deck;
             gameState.Round = 0;
-            gameState.Users = gameUsers;
+            gameState.Users = davoserJazzGameUsers;
+            gameState.RoundType = 0;
+            gameState.Dealer = gameState.Users[0];
+            gameState.Users[0].IsDealer = true;
+            
+            gameState.ActiveUser = gameState.Users[1];
+            gameState.Users[1].YourTurn = true;
 
             _roomToGameStates.Add(roomId, gameState);
         }
