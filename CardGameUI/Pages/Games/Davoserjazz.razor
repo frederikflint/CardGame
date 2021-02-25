@@ -7,21 +7,32 @@
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
+<div class="flex justify-center items-center">
+    <button @onclick="NavigateToIndex">Home</button>
+</div>
 <div class="flex h-full">
-    <div class="flex justify-between overflow-x-scroll self-center mx-auto grid grid-cols-7">
-        <div class="col-span-7">
-            <button @onclick="NavigateToIndex">Home</button>
+    <div class="flex h-full items-center justify-between self-center mx-auto">
+        <div class="flex flex-col h-full justify-center">
+
+            <div class="flex grid grid-cols-7">
+                @if (_yourTurn)
+                {
+                    <p class="col-span-7">It is your turn! Make a move!</p>
+                }
+                @foreach (var card in GetOrderedCards())
+                {
+                    <button @onclick="() => PlayCard(card)">
+                        <div class="flex flex-col justify-between p-2 m-2 hover:bg-blue-400 @(_yourTurn &&
+                                                                                               (_suitToMatch == 0 || card.Suit == _suitToMatch || !_cards.Exists(c => c.Suit == _suitToMatch)) 
+                                                                                                ? "bg-yellow-400" 
+                                                                                                : "")">
+                            <img class="w-24" src="@GetFileName(card)" alt="/cards/cardback.png"/>
+                        </div>
+                        @* <CardComponent _card="card"></CardComponent> *@
+                    </button>
+                }
+            </div>
         </div>
-        @if (_yourTurn)
-        {
-            <p class="col-span-7">It is your turn! Make a move!</p>
-        }
-        @foreach (var card in GetOrderedCards())
-        {
-            <button @onclick="() => PlayCard(card)">
-                <CardComponent _card="card"></CardComponent>
-            </button>
-        }
     </div>
 </div>
 
@@ -32,6 +43,7 @@
 
     private HubConnection _hubConnection;
     private List<CardClass> _cards = new List<CardClass>();
+    private Suit _suitToMatch;
     private bool _yourTurn = false;
 
     protected override async Task OnInitializedAsync()
@@ -49,11 +61,10 @@
             StateHasChanged();
         });
 
-        _hubConnection.On<string>("ActivePlayer", (guid) =>
+        _hubConnection.On<RoundInformation>("RoundInformation", (roundInformation) =>
         {
-            Console.WriteLine(guid);
             var myGuid = SessionStorage.GetItem<string>("SessionGuid");
-            if (myGuid == guid)
+            if (myGuid == roundInformation.ActivePlayerGuid)
             {
                 _yourTurn = true;
             }
@@ -61,6 +72,8 @@
             {
                 _yourTurn = false;
             }
+
+            _suitToMatch = roundInformation.SuitToMatch;
 
             StateHasChanged();
         });
@@ -94,5 +107,77 @@
         NavigationManager.NavigateTo($"");
     }
 
+    private string GetFileName(CardClass card)
+    {
+        var fileName = "/cards/";
+
+        switch (card.Suit)
+        {
+            case Suit.DIAMOND:
+                fileName += "diamond/";
+                break;
+            case Suit.CLUB:
+                fileName += "club/";
+                break;
+            case Suit.HEART:
+                fileName += "heart/";
+                break;
+            case Suit.SPADE:
+                fileName += "spade/";
+                break;
+            default:
+                break;
+        }
+
+        switch (card.Number)
+        {
+            case Number.ACE:
+                fileName += "ace";
+                break;
+            case Number.TWO:
+                fileName += "2";
+                break;
+            case Number.THREE:
+                fileName += "3";
+                break;
+            case Number.FOUR:
+                fileName += "4";
+                break;
+            case Number.FIVE:
+                fileName += "5";
+                break;
+            case Number.SIX:
+                fileName += "6";
+                break;
+            case Number.SEVEN:
+                fileName += "7";
+                break;
+            case Number.EIGHT:
+                fileName += "8";
+                break;
+            case Number.NINE:
+                fileName += "9";
+                break;
+            case Number.TEN:
+                fileName += "10";
+                break;
+            case Number.JACK:
+                fileName += "jack";
+                break;
+            case Number.QUEEN:
+                fileName += "queen";
+                break;
+            case Number.KING:
+                fileName += "king";
+                break;
+            case Number.JOKER:
+                fileName += "joker";
+                break;
+            default:
+                break;
+        }
+
+        return fileName + ".png";
+    }
 
 }

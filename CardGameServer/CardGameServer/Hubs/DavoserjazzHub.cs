@@ -23,6 +23,7 @@ namespace CardGameServer.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
 
             await Clients.Caller.SendAsync("PlayerInformation", gameUser);
+            await Clients.Group(roomId).SendAsync("RoundInformation", _davoserjazzGameService.GetRoundInformation(roomId));
         }
 
         public async Task UserTakeTurn(string roomId, string playerGuid, Suit suit, Number number)
@@ -30,7 +31,7 @@ namespace CardGameServer.Hubs
             var gameUser = _davoserjazzGameService.HandlePlayerTurn(roomId, playerGuid, suit, number);
 
             await Clients.Caller.SendAsync("PlayerInformation", gameUser);
-            await Clients.Group(roomId).SendAsync("ActivePlayer", _davoserjazzGameService.GetGuidOfActiveUser(roomId));
+            await Clients.Group(roomId).SendAsync("RoundInformation", _davoserjazzGameService.GetRoundInformation(roomId));
         }
     }
 }

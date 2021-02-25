@@ -16,6 +16,8 @@ namespace CardGameServer.Entities
         public RoundTypeEnum RoundType { get; set; }
         
         public Suit SuitToMatch { get; set; }
+        
+        public int IndexOfFirstPlayerInRound { get; set; }
 
         public static Dictionary<RoundTypeEnum, bool> AceHighestByRoundType = new Dictionary<RoundTypeEnum, bool>()
         {
@@ -38,6 +40,8 @@ namespace CardGameServer.Entities
             {RoundTypeEnum.GET_MOST_TRICKS, false},
             {RoundTypeEnum.AVOID_ACES, true}
         };
+        
+        
     }
 
     public enum RoundTypeEnum

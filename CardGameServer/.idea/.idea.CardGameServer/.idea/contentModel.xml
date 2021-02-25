@@ -16,6 +16,7 @@
         </e>
         <e p="Dtos" t="Include">
           <e p="createRoomDto.cs" t="Include" />
+          <e p="RoundInformation.cs" t="Include" />
         </e>
         <e p="Entities" t="Include">
           <e p="Card.cs" t="Include" />
