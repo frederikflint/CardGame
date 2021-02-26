@@ -15,4 +15,11 @@
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\icons\club.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\icons\diamond.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\icons\heart.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\icons\spade.png" />
+  </ItemGroup>
+
 </Project>
