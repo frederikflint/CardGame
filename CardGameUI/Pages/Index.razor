@@ -71,16 +71,41 @@
                 Create new game
             </button>
         </div>
+
+        <div>
+            <p class="font-bold mt-2">Spectate</p>
+        </div>
+
+        @if (_roomsToSpectate.Count > 0)
+        {
+            <select @bind="_selectSpectateRoomId" class="w-full">
+                @foreach (var room in _roomsToSpectate)
+                {
+                    <option value=@room>@room</option>
+                }
+            </select>
+        }
+        else
+        {
+            <p>No game rooms available for spectate</p>
+        }
+
+        <button disabled="@(_selectSpectateRoomId == "")" class="text-white border border-black rounded p-2 w-full @(_selectSpectateRoomId == "" ? "bg-gray-400" : "bg-blue-400 hover:bg-blue-600")" @onclick="SpectateGame">
+            Join Game
+        </button>
     </div>
 </div>
 
 @code {
     private HubConnection _hubConnection;
+    private HubConnection _lobbyHubConnection;
     private string _selectRoomId = "";
+    private string _selectSpectateRoomId = "";
     private string _newRoomId = "";
     private string _username = "";
     private bool _userCreatedRoom = false;
     private List<string> _rooms = new List<string>();
+    private List<string> _roomsToSpectate = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,7 +132,7 @@
             {
                 _selectRoomId = roomId;
             }
-            
+
             StateHasChanged();
 
             if (!_userCreatedRoom)
@@ -120,6 +145,19 @@
         });
 
         await _hubConnection.StartAsync();
+
+        _lobbyHubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/lobbyhub"))
+            .Build();
+
+        _lobbyHubConnection.On<List<string>>("ActiveGameRooms", rooms =>
+        {
+            _roomsToSpectate = rooms;
+
+            StateHasChanged();
+        });
+
+        await _lobbyHubConnection.StartAsync();
     }
 
     private async Task CreateNewGameRoom()
@@ -163,15 +201,19 @@
     {
         return string.IsNullOrEmpty(_selectRoomId) || (_username == "");
     }
-    
+
     private bool CreateRoomInfoMissing()
     {
         return string.IsNullOrEmpty(_newRoomId) || (_username == "");
+    }
+    
+    private void SpectateGame()
+    {
+        NavigationManager.NavigateTo($"games/spectate/davoserjazz/{_selectSpectateRoomId}");
     }
 
     public class CreateRoom
     {
         public string RoomId { get; set; }
     }
-
 }

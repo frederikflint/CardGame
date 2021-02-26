@@ -15,6 +15,11 @@ namespace CardGameServer.Services
             _roomToGameStates = new Dictionary<string, DavoserJazzGameState>();
         }
 
+        public List<string> GetActiveGameRooms()
+        {
+            return _roomToGameStates.Keys.ToList();
+        }
+
         public override void InitializeGame(string roomId, List<User> users)
         {
             List<GameUser> gameUsers = users.Select(user => new GameUser() {User = user}).ToList();
@@ -30,7 +35,7 @@ namespace CardGameServer.Services
 
             DealCards(deck, gameUsers);
 
-            var davoserJazzGameUsers = gameUsers.Select(gUser => new DavoserJazzGameUser
+            var davoserJazzGameUsers = gameUsers.Select(gUser => new GameUser()
             {
                 Hand = gUser.Hand,
                 User = gUser.User,
@@ -46,7 +51,7 @@ namespace CardGameServer.Services
             gameState.RoundType = 0;
             gameState.Dealer = gameState.Users[0];
             gameState.Users[0].IsDealer = true;
-            
+
             gameState.ActiveUser = gameState.Users[1];
             gameState.Users[1].YourTurn = true;
 
@@ -55,20 +60,53 @@ namespace CardGameServer.Services
             _roomToGameStates.Add(roomId, gameState);
         }
 
+        public override void AddUserConnection(string roomId, string userGuid, string connectionId)
+        {
+            var gameState = _roomToGameStates[roomId];
+
+            if (gameState == null)
+            {
+                throw new Exception("No game state for room exist");
+            }
+
+            var user = gameState.Users.Find(u => u.User.Guid == userGuid);
+
+            if (user == null)
+            {
+                throw new Exception("User with the given guid doesn't exist in room");
+            }
+
+            user.User.ConnectionId = connectionId;
+        }
+
         public RoundInformation GetRoundInformation(string roomId)
         {
             var gameState = _roomToGameStates[roomId];
 
-            var roundInformation = new RoundInformation()
+            var roundInfo = new RoundInformation()
             {
+                UserInformation = gameState.Users.Select(u =>
+                {
+                    return new GameUserInfo()
+                    {
+                        Score = u.Score,
+                        Table = u.Table,
+                        User = u.User,
+                        ActiveCard = u.ActiveCard,
+                        IsDealer = u.IsDealer,
+                        YourTurn = u.YourTurn,
+                        CardInHandAmount = u.Hand.Count
+                    };
+                }).ToList(),
                 ActivePlayerGuid = gameState.ActiveUser.User.Guid,
                 SuitToMatch = gameState.SuitToMatch,
+                Round = gameState.RoundType,
             };
-            
-            return roundInformation;
+
+            return roundInfo;
         }
 
-        public DavoserJazzGameUser HandlePlayerTurn(string roomId, string playerGuid, Suit suit, Number number)
+        public DavoserJazzGameState HandlePlayerTurn(string roomId, string playerGuid, Suit suit, Number number)
         {
             var gameState = _roomToGameStates[roomId];
             var playerIsEldestHand = false;
@@ -78,7 +116,7 @@ namespace CardGameServer.Services
             {
                 throw new Exception("Room doesn't contain a game state for DavoserJazz");
             }
-            
+
             var user = gameState.Users.Find(u => u.User.Guid == playerGuid);
 
             // If user doesn't exist in game room, throw error
@@ -93,13 +131,13 @@ namespace CardGameServer.Services
                 throw new Exception(
                     $"Player with guid {playerGuid} is not the active player, and must wait for it their turn");
             }
-            
+
             // If user is right after dealer, this user is eldest hand
             if (gameState.Users[gameState.IndexOfFirstPlayerInRound].User.Guid == user.User.Guid)
             {
                 playerIsEldestHand = true;
             }
-            
+
             // Make sure that the user is in possession of the card wished to play, otherwise throw error
             if (!user.Hand.Any(card => card.Suit == suit && card.Number == number))
             {
@@ -108,7 +146,8 @@ namespace CardGameServer.Services
             }
 
             // User wishes to play a card not matching the first played suit of the round
-            if (!playerIsEldestHand && gameState.SuitToMatch != 0 && suit != gameState.SuitToMatch && number != Number.JOKER)
+            if (!playerIsEldestHand && gameState.SuitToMatch != 0 && suit != gameState.SuitToMatch &&
+                number != Number.JOKER)
             {
                 // This is only allowed if user doesn't have a card matching that suit, otherwise throw error
                 if (user.Hand.Any(card => card.Suit == gameState.SuitToMatch))
@@ -128,25 +167,49 @@ namespace CardGameServer.Services
             user.ActiveCard = user.Hand.Find(c => c.Suit == suit && c.Number == number);
             user.Hand.Remove(user.ActiveCard);
             user.YourTurn = false;
-            
+
             // Set next players turn
             var indexOfNextPlayer = (gameState.Users.IndexOf(user) + 1) % gameState.Users.Count;
             gameState.Users[indexOfNextPlayer].YourTurn = true;
             gameState.ActiveUser = gameState.Users[indexOfNextPlayer];
-            
+
             // If everyone played a card, wrap up this round
             if (gameState.Users.TrueForAll(gU => gU.ActiveCard != null))
             {
                 WrapUpTurn(gameState);
             }
 
-            return user;
+            // If all cards have been played, advance to next round
+            if (gameState.Users.TrueForAll(u => u.Hand.Count == 0))
+            {
+                gameState.Users.ForEach(u => u.Table = new List<Card>());
+                
+                var deck = GenerateDeck(CalculateAmountOfJokers(gameState.Users.Count));
+                deck = ShuffleCards(deck);
+
+                DealCards(deck, gameState.Users);
+
+                gameState.Deck = deck;
+                gameState.Round = 0;
+                gameState.RoundType += 1;
+
+                var indexOfNewDealer = (gameState.Users.IndexOf(gameState.Dealer) + 1) % gameState.Users.Count;
+                gameState.Dealer = gameState.Users[indexOfNewDealer];
+                gameState.Users[indexOfNewDealer].IsDealer = true;
+
+                gameState.ActiveUser = gameState.Users[indexOfNewDealer + 1];
+                gameState.Users[indexOfNewDealer + 1].YourTurn = true;
+
+                gameState.IndexOfFirstPlayerInRound = indexOfNewDealer + 1;
+            }
+
+            return gameState;
         }
 
         private void WrapUpTurn(DavoserJazzGameState gameState)
         {
             // Find user who won this round.
-            DavoserJazzGameUser user = gameState.Users[gameState.IndexOfFirstPlayerInRound];
+            GameUser user = gameState.Users[gameState.IndexOfFirstPlayerInRound];
             // If user did not play joker initially, calculate winner of the round
             if (gameState.SuitToMatch != 0)
             {
@@ -156,8 +219,8 @@ namespace CardGameServer.Services
                     i++)
                 {
                     var aceIsHighest = DavoserJazzGameState.AceHighestByRoundType[gameState.RoundType];
-                
-                    var currentUsersCard = gameState.Users[i % gameState.Users.Count].ActiveCard; 
+
+                    var currentUsersCard = gameState.Users[i % gameState.Users.Count].ActiveCard;
                     // If current player beats currently played card
                     if ((int) currentUsersCard.Number > (int) lastUsersCard.Number)
                     {
@@ -167,7 +230,7 @@ namespace CardGameServer.Services
                             continue;
                         }
 
-                        
+
                         // If current users card doesn't match the suit of this round, skip this player
                         if (currentUsersCard.Suit != gameState.SuitToMatch)
                         {
@@ -204,9 +267,10 @@ namespace CardGameServer.Services
             gameState.ActiveUser = user;
             user.YourTurn = true;
 
+            gameState.Round += 1;
         }
 
-        private void CalculateScoreForUser(DavoserJazzGameUser user, List<Card> cards, DavoserJazzGameState gameState)
+        private void CalculateScoreForUser(GameUser user, List<Card> cards, DavoserJazzGameState gameState)
         {
             int score = 0;
             switch (gameState.RoundType)
@@ -226,7 +290,7 @@ namespace CardGameServer.Services
                 case RoundTypeEnum.AVOID_FIVES_AND_LADIES:
                     cards.ForEach(c =>
                     {
-                        if (c.Number == Number.FIVE ||c.Number == Number.QUEEN)
+                        if (c.Number == Number.FIVE || c.Number == Number.QUEEN)
                         {
                             score += 20;
                         }
@@ -242,19 +306,34 @@ namespace CardGameServer.Services
                     });
                     break;
                 case RoundTypeEnum.AVOID_FIRST_AND_LAST_TRICK:
+                    if (gameState.Round == 0)
+                    {
+                        score += 20;
+                    }
+                    else if (gameState.Round == gameState.Users.Count - 1)
+                    {
+                        score += 40;
+                    }
+
                     break;
                 case RoundTypeEnum.GET_MOST_TRICKS:
+                    score -= 10;
                     break;
                 case RoundTypeEnum.AVOID_ACES:
-                    break;
-                default:
+                    cards.ForEach(c =>
+                    {
+                        if (c.Number == Number.KING && (c.Suit == Suit.CLUB || c.Suit == Suit.SPADE))
+                        {
+                            score += 30;
+                        }
+                    });
                     break;
             }
 
             user.Score += score;
         }
 
-        public DavoserJazzGameUser GetPlayerInformation(string roomId, string playerGuid)
+        public GameUser GetPlayerInformation(string roomId, string playerGuid)
         {
             if (!_roomToGameStates.ContainsKey(roomId))
             {

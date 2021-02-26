@@ -1,0 +1,195 @@
+﻿@page "/games/spectate/davoserjazz/{roomid}"
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.WebUtilities
+@inject Blazored.LocalStorage.ISyncLocalStorageService LocalStorage
+@inject Blazored.SessionStorage.ISyncSessionStorageService SessionStorage
+
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+
+<div class="flex flex-col h-full">
+    <div class="flex w-full justify-center align-middle text-center">
+        <p class="font-bold">Davoserjazz</p>
+    </div>
+    <div class="flex w-full h-full justify-between">
+        <div class="flex flex-col w-1/4 items-stretch">
+            @foreach (var user in _usersLeft)
+            {
+                <div class="h-1/4 flex flex-col border border-black rounded m-1 overflow-hidden @(user.YourTurn ? "bg-yellow-400" : "")">
+                    <div class="mx-4 flex justify-between">
+                        <p>@user.User.Username</p>
+                        <p>Score: @user.Score</p>
+                    </div>
+                    <div class="bg-green-200 flex flex-grow">
+                        <div class="flex flex-col w-full">
+                            <div class="flex m-2 w-full">
+                                @for (int i = 0; i < @user.CardInHandAmount; i++)
+                                {
+                                    <img src="/cards/cardback.png" alt="/cards/cardback.png" class="h-12 w-8 ml-2 -mr-6"/>
+                                }
+                            </div>
+                            <p class="font-bold ml-2">Point givers:</p>
+                            <div class="flex m-2 w-full">
+                                @foreach (var card in GetPointGivingCards(user.Table))
+                                {
+                                    <img src="@Utility.GetFileName(card)" alt="@Utility.GetFileName(card)" class="h-12 w-8 ml-2 -mr-6"/>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="flex flex-col w-1/2 border border-black rounded bg-gray-100 m-2">
+            <div class="self-center justify-self-center text-center">
+                <p>@Utility.GetRoundNameByType(_roundType)</p>
+            </div>
+            <div class="self-center justify-self-center text-center">
+                <p>@(Utility.AceHighest(_roundType) ? "Ace highest" : "Ace lowest")</p>
+            </div>
+            <div class="flex w-full h-full overflow-hidden">
+                <div class="flex flex-col w-1/2 bg-green-200">
+                    @foreach (var user in _usersLeft)
+                    {
+                        <div class="flex h-1/4 items-center">
+                            @if (user.ActiveCard != null)
+                            {
+                                <img src="@Utility.GetFileName(user.ActiveCard)" alt="@Utility.GetFileName(user.ActiveCard)" class="h-20 ml-3"/>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="flex flex-col w-1/2 bg-green-200">
+                    @foreach (var user in _usersRight)
+                    {
+                        <div class="flex h-1/4 items-center">
+                            @if (user.ActiveCard != null)
+                            {
+                                <img src="@Utility.GetFileName(user.ActiveCard)" alt="@Utility.GetFileName(user.ActiveCard)" class="h-20 mr-3"/>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col w-1/4 items-stretch">
+            @foreach (var user in _usersRight)
+            {
+                <div class="h-1/4 flex flex-col border border-black rounded m-1 overflow-hidden @(user.YourTurn ? "bg-yellow-400" : "")">
+                    <div class="mx-4 flex justify-between">
+                        <p>@user.User.Username</p>
+                        <p>Score: @user.Score</p>
+                    </div>
+                    <div class="bg-green-200 flex flex-grow">
+                        <div class="flex flex-col w-full">
+                            <div class="flex m-2 w-full">
+                                @for (int i = 0; i < @user.CardInHandAmount; i++)
+                                {
+                                    <img src="/cards/cardback.png" alt="/cards/cardback.png" class="h-12 w-8 ml-2 -mr-6"/>
+                                }
+                            </div>
+                            <p class="font-bold ml-2">Point givers:</p>
+                            <div class="flex m-2 w-full">
+                                @foreach (var card in GetPointGivingCards(user.Table))
+                                {
+                                    <img src="@Utility.GetFileName(card)" alt="@Utility.GetFileName(card)" class="h-12 w-8 ml-2 -mr-6"/>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string RoomId { get; set; }
+
+    private HubConnection _hubConnection;
+
+    private Suit _suitToMatch;
+    private RoundTypeEnum _roundType;
+    private List<GameUserInfo> _usersLeft = new List<GameUserInfo>();
+    private List<GameUserInfo> _usersRight = new List<GameUserInfo>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/davoserjazzhub"))
+            .Build();
+
+
+        _hubConnection.On<RoundInformation>("RoundInformation", (roundInformation) =>
+        {
+            Console.Write("Message");
+            _suitToMatch = roundInformation.SuitToMatch;
+            _roundType = roundInformation.Round;
+
+            var count = 0;
+
+            _usersLeft = new List<GameUserInfo>();
+            _usersRight = new List<GameUserInfo>();
+
+            foreach (var gameUserInfo in roundInformation.UserInformation)
+            {
+                Console.WriteLine(gameUserInfo.User.Username);
+                if (count < 4)
+                {
+                    _usersLeft.Add(gameUserInfo);
+                }
+                else
+                {
+                    _usersRight.Add(gameUserInfo);
+                }
+
+                count++;
+            }
+
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync();
+
+        await _hubConnection.SendAsync("EnterGameAsSpectator", RoomId);
+    }
+
+    private List<CardClass> GetPointGivingCards(List<CardClass> cards)
+    {
+        switch (_roundType)
+        {
+            case RoundTypeEnum.AVOID_CLUB:
+                cards = cards.Where(c => c.Suit == Suit.CLUB).ToList();
+                break;
+            case RoundTypeEnum.AVOID_TAKE_A_TRICK:
+                break;
+            case RoundTypeEnum.AVOID_FIVES_AND_LADIES:
+                cards = cards.Where(c => c.Number == Number.FIVE || c.Number == Number.QUEEN).ToList();
+                break;
+            case RoundTypeEnum.AVOID_BLACK_KINGS:
+                cards = cards.Where(c => c.Number == Number.KING && (c.Suit == Suit.CLUB || c.Suit == Suit.SPADE)).ToList();
+                break;
+            case RoundTypeEnum.AVOID_FIRST_AND_LAST_TRICK:
+                break;
+            case RoundTypeEnum.GET_MOST_TRICKS:
+                break;
+            case RoundTypeEnum.AVOID_ACES:
+                cards = cards.Where(c => c.Number == Number.ACE).ToList();
+                break;
+        }
+
+        return cards;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _hubConnection.DisposeAsync();
+    }
+
+}

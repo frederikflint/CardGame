@@ -21,6 +21,11 @@ namespace CardGameServer.Hubs
             _davoserjazzGameService = davoserjazzGameService;
         }
 
+        public override async Task OnConnectedAsync()
+        {
+            await Clients.Caller.SendAsync("ActiveGameRooms", _davoserjazzGameService.GetActiveGameRooms());
+        }
+
         public async Task SendMessage(string user, string message, string roomId)
         {
             _messageService.AddMessage(user, message, roomId);
@@ -108,6 +113,10 @@ namespace CardGameServer.Hubs
             _davoserjazzGameService.InitializeGame(roomId, _roomService.GetUsersInRoom(roomId));
 
             await Clients.Group(roomId).SendAsync("GameStarted");
+            
+            _roomService.CleanUpRoom(roomId);
+
+            await Clients.All.SendAsync("ActiveGameRooms", _davoserjazzGameService.GetActiveGameRooms());
         }
     }
 }

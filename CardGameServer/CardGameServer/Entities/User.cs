@@ -7,6 +7,8 @@ namespace CardGameServer.Entities
         public string Username { get; set; }
         public string Guid { get; set; }
         public bool Admin { get; set; }
+        
+        public string ConnectionId { get; set; }
     }
 
     public class GameUser
@@ -17,11 +19,17 @@ namespace CardGameServer.Entities
         public List<Card> Table { get; set; }
         public bool YourTurn { get; set; }
         public bool IsDealer { get; set; }
-        
+        public Card ActiveCard { get; set; }
     }
 
-    public class DavoserJazzGameUser : GameUser
+    public class GameUserInfo
     {
+        public User User { get; set; }
+        public int Score { get; set; }
+        public int CardInHandAmount { get; set; }
+        public List<Card> Table { get; set; }
+        public bool YourTurn { get; set; }
+        public bool IsDealer { get; set; }
         public Card ActiveCard { get; set; }
     }
 }

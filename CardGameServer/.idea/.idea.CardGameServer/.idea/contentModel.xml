@@ -10,7 +10,6 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="CardGameServer.csproj" t="IncludeRecursive" />
         <e p="Controllers" t="Include">
-          <e p="GameController.cs" t="Include" />
           <e p="RoomController.cs" t="Include" />
           <e p="WeatherForecastController.cs" t="Include" />
         </e>

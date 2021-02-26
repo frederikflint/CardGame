@@ -17,11 +17,17 @@ namespace CardGameUI.Shared
         public List<CardClass> Table { get; set; }
         public bool YourTurn { get; set; }
         public bool IsDealer { get; set; }
-        
+        public CardClass ActiveCard { get; set; }
     }
-
-    public class DavoserJazzGameUser : GameUser
+    
+    public class GameUserInfo
     {
+        public User User { get; set; }
+        public int Score { get; set; }
+        public int CardInHandAmount { get; set; }
+        public List<CardClass> Table { get; set; }
+        public bool YourTurn { get; set; }
+        public bool IsDealer { get; set; }
         public CardClass ActiveCard { get; set; }
     }
 }

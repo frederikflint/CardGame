@@ -2,16 +2,16 @@ using System.Collections.Generic;
 
 namespace CardGameServer.Entities
 {
-    public class GameState<TUserType>
+    public class GameState
     {
-        public List<TUserType> Users { get; set; }
-        public TUserType ActiveUser { get; set; }
-        public TUserType Dealer { get; set; }
+        public List<GameUser> Users { get; set; }
+        public GameUser ActiveUser { get; set; }
+        public GameUser Dealer { get; set; }
         public List<Card> Deck { get; set; }
         public int Round { get; set; }
     }
 
-    public class DavoserJazzGameState : GameState<DavoserJazzGameUser>
+    public class DavoserJazzGameState : GameState
     {
         public RoundTypeEnum RoundType { get; set; }
         
@@ -30,6 +30,8 @@ namespace CardGameServer.Entities
             {RoundTypeEnum.AVOID_ACES, true}
         };
         
+        
+        // TODO: Determine whether this is needed or not
         public static Dictionary<RoundTypeEnum, bool> ScoreIncrementByRoundType = new Dictionary<RoundTypeEnum, bool>()
         {
             {RoundTypeEnum.AVOID_CLUB, true},
@@ -40,8 +42,6 @@ namespace CardGameServer.Entities
             {RoundTypeEnum.GET_MOST_TRICKS, false},
             {RoundTypeEnum.AVOID_ACES, true}
         };
-        
-        
     }
 
     public enum RoundTypeEnum

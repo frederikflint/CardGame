@@ -16,6 +16,7 @@ namespace CardGameServer.Services
         public void RemoveClientFromRoom(string clientId, string roomId);
         public bool RoomExists(string roomId);
         public void CleanupUser(string guid);
+        public void CleanUpRoom(string roomId);
     }
 
     public class RoomService : IRoomService
@@ -133,6 +134,12 @@ namespace CardGameServer.Services
                 _roomClientDictionary.Remove(room);
                 _rooms.Remove(room);
             }
+        }
+
+        public void CleanUpRoom(string roomId)
+        {
+            _rooms.Remove(roomId);
+            _roomClientDictionary.Remove(roomId);
         }
     }
 }

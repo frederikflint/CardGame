@@ -15,18 +15,17 @@
         <div class="flex flex-col h-full justify-center">
 
             <div class="flex grid grid-cols-7">
+                <p class="col-span-7">Score: @_score</p>
                 @if (_yourTurn)
                 {
                     <p class="col-span-7">It is your turn! Make a move!</p>
+                    <p class="col-span-7">Suit to match: @(_suitToMatch == 0 ? "None" : _suitToMatch.ToString())</p>
                 }
                 @foreach (var card in GetOrderedCards())
                 {
                     <button @onclick="() => PlayCard(card)">
-                        <div class="flex flex-col justify-between p-2 m-2 hover:bg-blue-400 @(_yourTurn &&
-                                                                                               (_suitToMatch == 0 || card.Suit == _suitToMatch || !_cards.Exists(c => c.Suit == _suitToMatch)) 
-                                                                                                ? "bg-yellow-400" 
-                                                                                                : "")">
-                            <img class="w-24" src="@GetFileName(card)" alt="/cards/cardback.png"/>
+                        <div class="flex flex-col justify-between p-2 m-2 hover:bg-blue-400 @(_yourTurn && (_suitToMatch == 0 || card.Suit == _suitToMatch || !_cards.Exists(c => c.Suit == _suitToMatch)) ? "bg-yellow-400" : "")">
+                            <img class="w-24" src="@Utility.GetFileName(card)" alt="/cards/cardback.png"/>
                         </div>
                         @* <CardComponent _card="card"></CardComponent> *@
                     </button>
@@ -45,6 +44,7 @@
     private List<CardClass> _cards = new List<CardClass>();
     private Suit _suitToMatch;
     private bool _yourTurn = false;
+    private int _score = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,12 +52,14 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/davoserjazzhub"))
             .Build();
 
-        _hubConnection.On<DavoserJazzGameUser>("PlayerInformation", (user) =>
+        _hubConnection.On<GameUser>("PlayerInformation", (user) =>
         {
             Console.WriteLine($"Handsize: {user.Hand.Count}");
 
             _cards = user.Hand;
             _yourTurn = user.YourTurn;
+            _score = user.Score;
+
             StateHasChanged();
         });
 
@@ -107,77 +109,6 @@
         NavigationManager.NavigateTo($"");
     }
 
-    private string GetFileName(CardClass card)
-    {
-        var fileName = "/cards/";
-
-        switch (card.Suit)
-        {
-            case Suit.DIAMOND:
-                fileName += "diamond/";
-                break;
-            case Suit.CLUB:
-                fileName += "club/";
-                break;
-            case Suit.HEART:
-                fileName += "heart/";
-                break;
-            case Suit.SPADE:
-                fileName += "spade/";
-                break;
-            default:
-                break;
-        }
-
-        switch (card.Number)
-        {
-            case Number.ACE:
-                fileName += "ace";
-                break;
-            case Number.TWO:
-                fileName += "2";
-                break;
-            case Number.THREE:
-                fileName += "3";
-                break;
-            case Number.FOUR:
-                fileName += "4";
-                break;
-            case Number.FIVE:
-                fileName += "5";
-                break;
-            case Number.SIX:
-                fileName += "6";
-                break;
-            case Number.SEVEN:
-                fileName += "7";
-                break;
-            case Number.EIGHT:
-                fileName += "8";
-                break;
-            case Number.NINE:
-                fileName += "9";
-                break;
-            case Number.TEN:
-                fileName += "10";
-                break;
-            case Number.JACK:
-                fileName += "jack";
-                break;
-            case Number.QUEEN:
-                fileName += "queen";
-                break;
-            case Number.KING:
-                fileName += "king";
-                break;
-            case Number.JOKER:
-                fileName += "joker";
-                break;
-            default:
-                break;
-        }
-
-        return fileName + ".png";
-    }
+    
 
 }

@@ -9,6 +9,8 @@ namespace CardGameServer.Services
     {
         public abstract void InitializeGame(string roomId, List<User> users);
 
+        public abstract void AddUserConnection(string roomId, string userGuid, string connectionId);
+
         public List<Card> GenerateDeck(int jokerAmount)
         {
             var cards = new List<Card>();
