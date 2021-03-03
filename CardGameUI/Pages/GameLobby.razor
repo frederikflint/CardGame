@@ -89,7 +89,7 @@
         }
 
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/api/lobbyhub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("https://cardgame.frederikflint.com/api/lobbyhub"))
             .Build();
 
         _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>

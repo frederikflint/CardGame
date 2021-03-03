@@ -49,7 +49,7 @@
     protected override async Task OnInitializedAsync()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/api/davoserjazzhub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("https://cardgame.frederikflint.com/api/davoserjazzhub"))
             .Build();
 
         _hubConnection.On<GameUser>("PlayerInformation", (user) =>

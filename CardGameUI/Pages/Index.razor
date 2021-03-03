@@ -109,7 +109,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Http.GetAsync("http://localhost:5000/room");
+        var response = await Http.GetAsync("https://cardgame.frederikflint.com/api/room");
         response.EnsureSuccessStatusCode();
 
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -119,7 +119,7 @@
         _selectRoomId = _rooms.FirstOrDefault();
 
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/api/indexhub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("https://cardgame.frederikflint.com/api/indexhub"))
             .Build();
 
         _hubConnection.On<string>("RoomUpdated", (roomId) =>
@@ -147,7 +147,7 @@
         await _hubConnection.StartAsync();
 
         _lobbyHubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/api/lobbyhub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("https://cardgame.frederikflint.com/api/lobbyhub"))
             .Build();
 
         _lobbyHubConnection.On<List<string>>("ActiveGameRooms", rooms =>
@@ -185,7 +185,7 @@
 
     private async Task RejoinGameRoom()
     {
-        var response = await Http.GetAsync($"http://localhost:5000/room/find?guid={SessionStorage.GetItem<string>("SessionGuid")}");
+        var response = await Http.GetAsync($"https://cardgame.frederikflint.com/api/room/find?guid={SessionStorage.GetItem<string>("SessionGuid")}");
 
         try
         {
