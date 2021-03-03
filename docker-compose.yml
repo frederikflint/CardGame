@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  card_ui:
+    image: blazor-webassembly-with-docker
+    ports:
+      - "8080:80"
+
+  card_backend:
+    image: cardgameserver
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5000:5000"
