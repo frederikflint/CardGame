@@ -2,12 +2,12 @@ version: "3"
 
 services:
   card_ui:
-    build: ./CardgameUI
+    build: CardgameUI
     ports:
       - "8080:80"
 
   card_backend:
-    build: ./CardGameServer/CardGameServer
+    build: CardGameServer/CardGameServer
     environment:
       - ASPNETCORE_URLS=http://+:5000
     ports:
