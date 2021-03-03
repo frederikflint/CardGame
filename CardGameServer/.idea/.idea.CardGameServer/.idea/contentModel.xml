@@ -11,6 +11,7 @@
           <e p="RoomController.cs" t="Include" />
           <e p="WeatherForecastController.cs" t="Include" />
         </e>
+        <e p="dockerfile" t="Include" />
         <e p="Dtos" t="Include">
           <e p="createRoomDto.cs" t="Include" />
           <e p="RoundInformation.cs" t="Include" />

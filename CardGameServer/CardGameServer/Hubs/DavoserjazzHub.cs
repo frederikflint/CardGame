@@ -38,6 +38,22 @@ namespace CardGameServer.Hubs
                 .SendAsync("RoundInformation", _davoserjazzGameService.GetRoundInformation(roomId));
         }
 
+        public async Task EnterGameAsPlayerWithGuid(string guid, string roomId)
+        {
+            var user = _davoserjazzGameService.GetPlayerInformation(roomId, guid);
+
+            if (user == null)
+            {
+                return;
+            }
+
+            await Clients.Caller.SendAsync("PlayerInformation", user);
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
+            await Clients.Group(roomId)
+                .SendAsync("RoundInformation", _davoserjazzGameService.GetRoundInformation(roomId));
+        }
+
         public async Task UserTakeTurn(string roomId, string playerGuid, Suit suit, Number number)
         {
             var gameState = _davoserjazzGameService.HandlePlayerTurn(roomId, playerGuid, suit, number);

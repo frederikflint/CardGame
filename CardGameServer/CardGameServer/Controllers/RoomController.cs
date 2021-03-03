@@ -16,12 +16,14 @@ namespace CardGameServer.Controllers
     public class RoomController : ControllerBase
     {
         private readonly IRoomService _roomService;
+        private readonly DavoserjazzGameService _davoserjazzGameService;
         private readonly ILogger<RoomController> _logger;
 
-        public RoomController(ILogger<RoomController> logger, IRoomService roomService)
+        public RoomController(ILogger<RoomController> logger, IRoomService roomService, DavoserjazzGameService  davoserjazzGameService)
         {
             _logger = logger;
             _roomService = roomService;
+            _davoserjazzGameService = davoserjazzGameService;
         }
 
         [HttpGet]
@@ -34,13 +36,14 @@ namespace CardGameServer.Controllers
         public IActionResult GetRoomFromGuid([FromQuery(Name = "guid")] string guid)
         {
              var room = _roomService.GetRoomFromUserGuid(guid);
+             var gameRoom = _davoserjazzGameService.FindRoomContainingUser(guid);
 
-             if (room == null)
+             if (room == null && gameRoom == null)
              {
                  return NotFound("Not Found");
              }
 
-             return Ok(room);
+             return Ok(room ?? gameRoom);
         }
     }
 }

@@ -172,6 +172,12 @@
         NavigationManager.NavigateTo($"gamelobby/{_selectRoomId}?username={_username}");
     }
 
+    private void JoinGameInProgress()
+    {
+        Console.Write(_selectRoomId);
+        NavigationManager.NavigateTo($"/games/davoserjazz/{_selectRoomId}");
+    }
+
     private void JoinGameRoomWithGuid()
     {
         NavigationManager.NavigateTo($"gamelobby/{_selectRoomId}");
@@ -194,7 +200,7 @@
         var responseBody = await response.Content.ReadAsStringAsync();
         _selectRoomId = responseBody;
 
-        JoinGameRoom();
+        JoinGameInProgress();
     }
 
     private bool JoinRoomInfoMissing()
@@ -206,7 +212,7 @@
     {
         return string.IsNullOrEmpty(_newRoomId) || (_username == "");
     }
-    
+
     private void SpectateGame()
     {
         NavigationManager.NavigateTo($"games/spectate/davoserjazz/{_selectSpectateRoomId}");
@@ -216,4 +222,5 @@
     {
         public string RoomId { get; set; }
     }
+
 }

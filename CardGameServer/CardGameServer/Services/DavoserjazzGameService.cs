@@ -20,6 +20,13 @@ namespace CardGameServer.Services
             return _roomToGameStates.Keys.ToList();
         }
 
+        public string FindRoomContainingUser(string userGuid)
+        {
+            // Find game room where the list of users has a user matching the userGuid given in method body
+            return _roomToGameStates.Keys.ToList()
+                .Find(roomId => _roomToGameStates[roomId].Users.Exists(u => u.User.Guid == userGuid));
+        }
+
         public override void InitializeGame(string roomId, List<User> users)
         {
             List<GameUser> gameUsers = users.Select(user => new GameUser() {User = user}).ToList();
