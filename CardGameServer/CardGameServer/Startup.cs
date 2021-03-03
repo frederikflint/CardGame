@@ -73,9 +73,9 @@ namespace CardGameServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<LobbyHub>("/lobbyhub");
-                endpoints.MapHub<IndexHub>("/indexhub");
-                endpoints.MapHub<DavoserjazzHub>("/davoserjazzhub");
+                endpoints.MapHub<LobbyHub>("api/lobbyhub");
+                endpoints.MapHub<IndexHub>("api/indexhub");
+                endpoints.MapHub<DavoserjazzHub>("api/davoserjazzhub");
             });
         }
     }

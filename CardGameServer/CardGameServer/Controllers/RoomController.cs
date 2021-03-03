@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace CardGameServer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class RoomController : ControllerBase
     {
         private readonly IRoomService _roomService;

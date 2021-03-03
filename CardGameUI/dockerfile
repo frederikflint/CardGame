@@ -3,10 +3,10 @@ WORKDIR /src
 COPY CardGameUI.csproj .
 RUN dotnet restore "CardGameUI.csproj"
 COPY . .
-RUN dotnet build "CardGameUI.csproj" -c Release -o /app/build
+RUN dotnet build "CardGameUI.csproj" -c Release
 
 FROM build AS publish
-RUN dotnet publish "CardGameUI.csproj" -c Release -o /app/publish
+RUN dotnet publish "CardGameUI.csproj" -c Release
 
 FROM nginx:alpine AS final
 WORKDIR /usr/share/nginx/html

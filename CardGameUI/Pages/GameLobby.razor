@@ -89,7 +89,7 @@
         }
 
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/lobbyhub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("http://localhost:5000/api/lobbyhub"))
             .Build();
 
         _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
